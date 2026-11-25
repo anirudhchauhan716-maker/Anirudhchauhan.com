@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23f3e3c3%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2245%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2238%22%20fill%3D%22%233c5a66%22%3EE%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ELORA — Maison de Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#f4f1ee;--mute:#cfc8c3;--line:#7a7474;--paper:#625d5d;--sand:#575252;--card:#6d6868;--sun:#f2c14e;--sea:#9fc3cf;--accent:#c96f3b}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--paper);font-weight:400;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.serif{font-family:"Cormorant Garamond",Georgia,serif}
+.up{text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+/* announcement + header */
+.announce{background:var(--ink);color:var(--paper);text-align:center;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:9px 12px}
+header{position:sticky;top:0;z-index:40;background:rgba(98,93,93,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hwrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 32px}
+.nav{display:flex;gap:26px}
+.nav a{font-size:12px;letter-spacing:.06em;text-transform:uppercase;position:relative;padding:4px 0}
+.nav a:after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--ink);transition:width .3s}
+.nav a:hover:after,.nav a.on:after{width:100%}
+.logo{font-weight:600;font-size:26px;letter-spacing:.34em;padding-left:.34em}
+.tools{display:flex;justify-content:flex-end;gap:22px;align-items:center}
+.tools button{font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.count{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:9px;background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:0;padding:0 5px}
+.burger{display:none}
+/* hero */
+.hero{position:relative;height:calc(100vh - 66px);min-height:560px;overflow:hidden;background:linear-gradient(180deg,#f6e6c9 0%,#f3d9b4 38%,#9fc3cf 62%,#6fa3b5 100%)}
+.hero .sunball{position:absolute;width:38vmin;height:38vmin;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fff3c4,#f2c14e 60%,#e9a23b);left:50%;top:18%;transform:translateX(-50%);box-shadow:0 0 120px 40px rgba(242,193,78,.45);animation:rise 2.4s cubic-bezier(.2,.7,.2,1) both}
+.hero .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;pointer-events:none}
+.hero .slide.on{opacity:1;pointer-events:auto}
+.hero .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 6s ease-out}
+.hero .slide.on img{transform:scale(1)}
+.hero .slide:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.42))}
+.hero .copy{z-index:2;text-shadow:0 2px 30px rgba(0,0,0,.25)}
+.hdots{position:absolute;left:0;right:0;bottom:26px;display:flex;justify-content:center;gap:10px;z-index:3}
+.hdots button{width:34px;height:2px;background:rgba(255,255,255,.45);padding:0}
+.hdots button.on{background:var(--card)}
+.harr{position:absolute;top:50%;transform:translateY(-50%);z-index:3;color:#fff;font-size:44px;line-height:1;padding:10px 18px;opacity:.75;font-family:"Cormorant Garamond",Georgia,serif}
+.harr:hover{opacity:1}.harr.prev{left:14px}.harr.next{right:14px}
+@keyframes rise{from{transform:translate(-50%,40%);opacity:.2}to{transform:translate(-50%,0);opacity:1}}
+.hero .waves{position:absolute;left:0;right:0;bottom:0;height:42%}
+.hero .copy{position:absolute;left:0;right:0;bottom:9%;text-align:center;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.12)}
+.hero h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(56px,10vw,140px);line-height:.9}
+.hero p{margin:18px 0 26px;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.btn{display:inline-block;padding:14px 30px;border:1px solid currentColor;font-size:12px;letter-spacing:.07em;text-transform:uppercase;transition:.25s}
+.btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.solid:hover{background:#dcd6d2}
+.btn.light{color:#fff}
+.btn.light:hover{background:var(--card);color:var(--ink);border-color:var(--paper)}
+.hero .float{position:absolute;width:min(22vw,240px);animation:bob 6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-14px) rotate(2deg)}}
+/* marquee */
+.marquee{overflow:hidden;border-block:1px solid var(--line);background:var(--card);white-space:nowrap}
+.marquee div{display:inline-block;padding:14px 0;animation:mq 38s linear infinite;font-family:"Cormorant Garamond",Georgia,serif;font-size:22px}
+.marquee span{margin:0 28px}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* sections */
+section{padding:72px 32px}
+.shead{display:flex;justify-content:space-between;align-items:end;margin-bottom:30px;gap:20px}
+.shead h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,54px);line-height:1}
+.shead a{font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid;padding-bottom:3px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 18px}
+.card{position:relative;cursor:pointer}
+.card .img{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--sand)}
+.card .img svg{position:absolute;inset:0;width:100%;height:100%;transition:opacity .5s,transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.card .img .alt{opacity:0}
+.card:hover .img .alt{opacity:1}
+.card:hover .img svg{transform:scale(1.03)}
+.badge{position:absolute;top:12px;left:12px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;background:var(--card);padding:5px 8px;z-index:2}
+.heart{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;transition:.2s}
+.heart:hover{background:rgba(255,255,255,.7)}
+.heart svg{width:18px;height:18px;fill:none;stroke:var(--ink);stroke-width:1.4}
+.heart.on svg{fill:var(--ink)}
+.quick{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(98,93,93,.92);text-align:center;padding:11px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;opacity:0;transform:translateY(8px);transition:.3s;z-index:2}
+.card:hover .quick{opacity:1;transform:none}
+.quick:hover{background:var(--ink);color:var(--paper)}
+.meta{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-size:16px}
+.meta .n{font-weight:500}
+.meta .c{color:var(--mute);font-size:14px;margin-top:4px}
+.dots{display:flex;gap:5px;margin-top:8px}
+.dots i{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,.15)}
+/* split campaign */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0}
+.tile{position:relative;aspect-ratio:1/1.05;overflow:hidden;cursor:pointer;display:block}
+.tile svg{width:100%;height:100%;display:block;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.tile:hover svg{transform:scale(1.04)}
+.tile .lbl{position:absolute;left:0;right:0;bottom:44px;text-align:center;color:#fff}
+.tile .lbl h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(40px,5vw,72px)}
+.statement{text-align:center;max-width:860px;margin:0 auto;padding:110px 32px}
+.statement p{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(26px,3.2vw,40px);line-height:1.25}
+.statement .up{display:block;margin-bottom:22px;color:var(--mute)}
+/* journal */
+.journal{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.jcard .jimg{aspect-ratio:4/5;overflow:hidden}
+.jcard svg{width:100%;height:100%;display:block;transition:transform 1.2s}
+.jcard:hover svg{transform:scale(1.04)}
+.jcard h4{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:28px;margin:14px 0 6px}
+.jcard p{color:var(--mute);font-size:14px;line-height:1.6}
+.ph{width:100%;height:100%;object-fit:cover;display:block;background:var(--sand)}
+.card .img img.ph{position:absolute;inset:0;transition:opacity .5s,transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.card:hover .img img.ph{transform:scale(1.03)}
+.gal .g{position:relative;width:100%}
+.hero .float{aspect-ratio:3/4;overflow:hidden;border-radius:200px 200px 6px 6px;box-shadow:0 30px 60px rgba(60,40,20,.25)}
+.tile img.ph,.jcard .jimg img.ph{transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.tile:hover img.ph,.jcard:hover .jimg img.ph{transform:scale(1.04)}
+.colorways a img.ph,.line .th img.ph{width:100%;height:100%}
+/* newsletter + footer */
+.news{background:var(--sand);text-align:center}
+.news h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:44px;margin-bottom:10px}
+.news p{color:var(--mute);margin-bottom:26px}
+.news form{display:flex;max-width:460px;margin:0 auto;border-bottom:1px solid var(--ink)}
+.news input{flex:1;border:0;background:none;padding:12px 4px;font:inherit;outline:none}
+footer{background:#3f3b3b;color:#dcd6d2;padding:64px 32px 30px}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}
+footer h5{font-weight:500;color:#fff;font-size:12px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:16px}
+footer li{list-style:none;font-size:14px;margin-bottom:9px;opacity:.8}
+footer li:hover{opacity:1}
+.flogo{font-size:40px;font-weight:600;letter-spacing:.34em;color:#fff}
+.fbottom{display:flex;justify-content:space-between;border-top:1px solid #333;margin-top:48px;padding-top:22px;font-size:12px;opacity:.6;gap:16px;flex-wrap:wrap}
+/* shop */
+.ptitle{padding:56px 32px 10px;text-align:center}
+.ptitle h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(46px,6vw,84px)}
+.ptitle p{color:var(--mute);margin-top:8px}
+.filters{position:sticky;top:65px;z-index:20;background:var(--paper);border-block:1px solid var(--line);padding:14px 32px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:18px;flex-wrap:wrap}
+.tabs button{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:4px 0;border-bottom:1px solid transparent}
+.tabs button.on{color:var(--ink);border-color:var(--ink)}
+.fright{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-left:auto}
+.sw{display:flex;gap:7px}
+.sw button{width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.18);outline-offset:2px}
+.sw button.on{outline:1px solid var(--ink)}
+select{font:inherit;font-size:12px;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);background:var(--card);padding:8px 10px}
+.rcount{font-size:12px;color:var(--mute);letter-spacing:.04em}
+.empty{text-align:center;padding:80px 20px;color:var(--mute)}
+/* product */
+.pd{display:grid;grid-template-columns:1.35fr 1fr;gap:0;border-bottom:1px solid var(--line)}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.gal .g{aspect-ratio:3/4;background:var(--sand);overflow:hidden}
+
+.gal svg{width:100%;height:100%;display:block}
+.info{padding:56px 48px;position:sticky;top:66px;align-self:start}
+.crumb{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:22px}
+.info h1{font-weight:500;font-size:26px;letter-spacing:.02em}
+.info .price{font-size:18px;margin:8px 0 26px}
+.info .desc{color:#ece7e3;line-height:1.7;font-size:15px;margin-bottom:26px}
+.lab{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mute);margin-bottom:10px;display:flex;justify-content:space-between}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.sizes button{min-width:50px;padding:11px 12px;border:1px solid var(--line);font-size:13px;background:var(--card);transition:.2s}
+.sizes button:hover{border-color:var(--ink)}
+.sizes button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.sizes button.out{color:#9a9393;text-decoration:line-through;cursor:not-allowed}
+.actions{display:flex;gap:10px;margin-bottom:28px}
+.actions .btn{flex:1;text-align:center}
+.actions .heart{position:static;border:1px solid var(--ink);border-radius:0;width:52px;height:auto}
+.acc{border-top:1px solid var(--line)}
+.acc details{border-bottom:1px solid var(--line)}
+.acc summary{list-style:none;padding:17px 0;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;justify-content:space-between}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary:after{content:"+";font-size:16px}
+.acc details[open] summary:after{content:"–"}
+.acc .body{padding:0 0 18px;color:#e3ddd8;font-size:14px;line-height:1.7}
+.colorways{display:flex;gap:10px;margin-bottom:26px}
+.colorways a{width:54px;aspect-ratio:3/4;overflow:hidden;border:1px solid transparent}
+.colorways a.on{border-color:var(--ink)}
+.colorways svg{width:100%;height:100%;display:block}
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,20,20,.35);opacity:0;pointer-events:none;transition:.3s;z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--paper);z-index:61;transform:translateX(100%);transition:transform .45s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:22px 26px;border-bottom:1px solid var(--line)}
+.dbody{flex:1;overflow:auto;padding:8px 26px}
+.line{display:grid;grid-template-columns:84px 1fr auto;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.line .th{aspect-ratio:3/4;background:var(--sand);overflow:hidden}
+.line .th svg{width:100%;height:100%}
+.line .ln{font-weight:500;font-size:14px}
+.line .ls{color:var(--mute);font-size:12px;margin-top:4px}
+.qty{display:flex;align-items:center;border:1px solid var(--line);width:max-content;margin-top:12px}
+.qty button{width:30px;height:30px}
+.qty span{min-width:22px;text-align:center;font-size:13px}
+.rm{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--mute);text-decoration:underline;margin-top:10px;display:block}
+.dfoot{padding:22px 26px;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px}
+.ship{height:3px;background:var(--line);margin:10px 0 18px;position:relative}
+.ship i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);transition:width .4s}
+/* search */
+.search{position:fixed;inset:0 0 auto 0;background:var(--paper);z-index:61;transform:translateY(-100%);transition:transform .45s cubic-bezier(.2,.7,.2,1);max-height:90vh;overflow:auto;padding:28px 32px 40px}
+.search.on{transform:none}
+.search input{width:100%;border:0;border-bottom:1px solid var(--ink);background:none;font-family:"Cormorant Garamond",Georgia,serif;font-size:44px;padding:8px 0;outline:none}
+.sres{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:26px}
+.sres .card .meta{font-size:14px}
+.sug{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.sug button{border:1px solid var(--line);padding:7px 14px;font-size:12px;letter-spacing:.03em;border-radius:30px;background:var(--card)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--ink);color:var(--paper);padding:14px 22px;font-size:13px;opacity:0;transition:.35s;z-index:80;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+/* about */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.about p{line-height:1.8;color:#ece7e3;margin-bottom:16px}
+.about .aimg{aspect-ratio:4/5}
+.about svg{width:100%;height:100%;display:block}
+.mobile-nav{display:none}
+@media (max-width:980px){
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .nav{display:none}.burger{display:flex}
+ .hwrap{padding:14px 18px}
+ .logo{font-size:20px}
+ section{padding:56px 18px}
+ .split,.pd,.about{grid-template-columns:1fr}
+ .journal{grid-template-columns:1fr}
+ .fgrid{grid-template-columns:1fr 1fr}
+ .info{position:static;padding:32px 18px}
+ .filters{padding:12px 18px;top:57px}
+ .sres{grid-template-columns:repeat(3,1fr)}
+ .tools .lbltxt{display:none}
+ .hero .float{display:none}
+ .mobile-nav{display:block;position:fixed;inset:0;background:var(--paper);z-index:62;padding:80px 28px;transform:translateX(-100%);transition:.4s}
+ .mobile-nav.on{transform:none}
+ .mobile-nav a{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:40px;margin-bottom:12px}
+}
+.hero h1,.shead h2,.ptitle h1,.tile .lbl h3,.news h2{letter-spacing:0;font-weight:500}
+.fbar{display:flex;justify-content:space-between;align-items:center;padding:18px 32px;border-bottom:1px solid var(--line)}
+#pcount{font-size:14px;color:var(--mute)}
+.fbtn{display:flex;align-items:center;gap:10px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.fpanel{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--paper);z-index:61;transform:translateX(100%);transition:transform .45s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column}
+.fpanel.on{transform:none}
+.fp-head{display:flex;justify-content:space-between;align-items:center;padding:24px 28px;border-bottom:1px solid var(--line);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:14px}
+.fp-body{flex:1;overflow:auto;padding:0 28px}
+.fsec{border-bottom:1px solid var(--line);padding:22px 0}
+.fsec summary{list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.fsec summary::-webkit-details-marker{display:none}
+.fsec summary:after{content:"+";font-weight:400;font-size:22px;line-height:1}
+.fsec[open] summary:after{content:"—";font-size:18px}
+.fsec .fin{padding-top:18px}
+.prow{display:flex;justify-content:space-between;font-weight:600;font-size:15px;margin-bottom:16px}
+.range{position:relative;height:18px}
+.range .track{position:absolute;left:0;right:0;top:7px;height:4px;background:var(--line)}
+.range .fill{position:absolute;top:7px;height:4px;background:var(--ink)}
+.range input{position:absolute;left:0;width:100%;top:0;height:18px;margin:0;-webkit-appearance:none;appearance:none;background:none;pointer-events:none}
+.range input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--ink);border:0;border-radius:0;pointer-events:auto;cursor:pointer}
+.range input::-moz-range-thumb{width:18px;height:18px;background:var(--ink);border:0;border-radius:0;pointer-events:auto;cursor:pointer}
+.fopts{display:flex;flex-wrap:wrap;gap:8px}
+.fopts button{border:1px solid var(--line);background:var(--card);padding:9px 14px;font-size:13px;min-width:46px}
+.fopts button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fcols button{display:flex;align-items:center;gap:8px}
+.fcols i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.15);display:inline-block}
+.fp-foot{display:flex;gap:10px;padding:18px 28px;border-top:1px solid var(--line)}
+.fp-foot button{flex:1;padding:15px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--ink)}
+.fp-foot #fview{background:var(--ink);color:var(--paper)}
+.fbar,.fbar button,.fpanel,.fpanel button{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
+.fp-head,.fsec summary,.prow,.fbtn{letter-spacing:0}
+@media (max-width:980px){.fbar{padding:16px 18px}}
+.ptitle.photo{position:relative;overflow:hidden;padding:0;height:clamp(300px,42vw,520px);display:flex;align-items:center;justify-content:center;background:var(--sand)}
+.ptitle.photo .pban{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ptitle.photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.38))}
+.ptitle.photo .pin{position:relative;z-index:1;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.ptitle.photo p{color:rgba(255,255,255,.9)}
+body.ovl #app{margin-top:calc(-1 * var(--hh,66px))}
+body.ovl .hero{height:100vh}
+body.ovl .ptitle.photo{padding-top:var(--hh,66px)}
+body.ovl header{background:rgba(98,93,93,calc(.94 * var(--p,0)));border-bottom-color:rgba(122,116,116,var(--p,0));backdrop-filter:blur(calc(10px * var(--p,0)));-webkit-backdrop-filter:blur(calc(10px * var(--p,0)))}
+body.ovl header:before{content:"";position:absolute;inset:0 0 -30px 0;background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,0));pointer-events:none;z-index:-1;opacity:calc(1 - var(--p,0))}
+header .nav a,header .logo,header .tools>*,header .count,header .nav a:after{transition:color .45s ease,background-color .45s ease,text-shadow .45s ease}
+body.clear header{color:#fff}
+body.clear header .nav a:after{background:var(--card)}
+body.clear header .count{background:#fff;color:#625d5d}
+body.clear header .logo,body.clear header .nav a,body.clear header .tools>*{text-shadow:0 1px 12px rgba(0,0,0,.25)}
+.stwrap{position:relative;overflow:hidden;min-height:clamp(460px,48vw,640px);display:flex;align-items:center;justify-content:center}
+.stwrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.stwrap:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(60,56,56,.55),rgba(60,56,56,.35) 50%,rgba(60,56,56,.6));z-index:1}
+.stwrap .statement{position:relative;z-index:2;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.3)}
+.stwrap .statement .up{color:rgba(255,255,255,.85)}
+.stwrap .statement .btn{color:#fff;border-color:#fff}
+.stwrap .statement .btn:hover{background:#fff;color:#625d5d}
+.pd .info,.pd .info button,.pd .info summary{font-family:'Montserrat',system-ui,sans-serif}
+.pd .info h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:34px;letter-spacing:0;line-height:1.15}
+.pd .info .price{font-family:'Montserrat',system-ui,sans-serif;font-weight:500}
+/* checkout */
+.co{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);min-height:calc(100vh - 66px);font-family:'Montserrat',system-ui,sans-serif}
+.co-main{padding:48px clamp(24px,5vw,80px) 80px}
+.co-side{background:var(--card);padding:48px clamp(24px,4vw,64px) 80px;border-left:1px solid var(--line)}
+.co-side-in{position:sticky;top:96px}
+.co h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:40px;margin-bottom:6px}
+.co .crumbs{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:36px}
+.co .crumbs a{text-decoration:underline;text-underline-offset:3px}
+.co h2{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:22px;margin:38px 0 16px;display:flex;align-items:baseline;gap:12px}
+.co h2 small{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--mute);letter-spacing:.06em}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cgrid .full{grid-column:1/-1}
+.cgrid.three{grid-template-columns:1.2fr 1fr 1fr}
+.fld{position:relative}
+.fld input,.fld select{width:100%;background:transparent;border:1px solid var(--line);color:var(--ink);font:inherit;font-size:14px;padding:22px 14px 8px;outline:none;border-radius:0;-webkit-appearance:none;appearance:none;transition:border-color .2s}
+.fld select{padding:22px 34px 8px 14px;text-transform:none;letter-spacing:0;font-size:14px;background-image:linear-gradient(45deg,transparent 50%,#cfc8c3 50%),linear-gradient(135deg,#cfc8c3 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.fld select option{background:#625d5d;color:#f4f1ee}
+.fld label{position:absolute;left:14px;top:8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);pointer-events:none}
+.fld input:focus,.fld select:focus{border-color:var(--ink)}
+.fld.err input,.fld.err select{border-color:#e07a5f}
+.fld .msg{display:none;color:#e9967a;font-size:11px;margin-top:5px}
+.fld.err .msg{display:block}
+.chk{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--mute);margin-top:12px;cursor:pointer}
+.chk input{accent-color:#f4f1ee;width:16px;height:16px}
+.ship-opts{border:1px solid var(--line)}
+.ship-opt{display:flex;align-items:center;gap:14px;padding:16px 16px;cursor:pointer;font-size:14px}
+.ship-opt+.ship-opt{border-top:1px solid var(--line)}
+.ship-opt input{accent-color:#f4f1ee;width:16px;height:16px}
+.ship-opt .sn{flex:1}
+.ship-opt .sd{display:block;color:var(--mute);font-size:12px;margin-top:3px}
+.paynote{font-size:12px;color:var(--mute);margin:-4px 0 14px;display:flex;align-items:center;gap:8px}
+.co .place{width:100%;margin-top:30px;padding:18px;font-size:13px}
+.co-item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 0}
+.co-item .th{position:relative;aspect-ratio:3/4;background:var(--sand);overflow:visible}
+.co-item .th img,.co-item .th svg{width:100%;height:100%;object-fit:cover;display:block}
+.co-item .q{position:absolute;top:-8px;right:-8px;background:var(--ink);color:var(--paper);font-size:11px;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px;z-index:2}
+.co-item .nm{font-size:14px;font-weight:500}
+.co-item .vr{font-size:12px;color:var(--mute);margin-top:3px}
+.co-item .pr{font-size:14px}
+.promo{display:flex;gap:10px;margin:22px 0;padding:22px 0;border-block:1px solid var(--line)}
+.promo .fld{flex:1}
+.promo button{border:1px solid var(--ink);padding:0 22px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.sumrow{display:flex;justify-content:space-between;font-size:14px;margin:10px 0}
+.sumrow.mute{color:var(--mute)}
+.sumrow.tot{font-size:18px;font-weight:600;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.sumrow.tot small{font-size:12px;color:var(--mute);font-weight:400;margin-right:6px}
+.co-empty{text-align:center;padding:160px 20px}
+.confirm{max-width:640px;margin:0 auto;padding:150px 24px 120px;text-align:center;font-family:'Montserrat',system-ui,sans-serif}
+.confirm .tick{width:64px;height:64px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;margin:0 auto 28px;font-size:26px}
+.confirm h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:44px;margin-bottom:14px}
+.confirm p{color:var(--mute);line-height:1.7;margin-bottom:8px}
+.confirm .ono{display:inline-block;margin:22px 0 34px;border:1px solid var(--line);padding:12px 20px;letter-spacing:.08em;font-size:13px}
+@media (max-width:980px){.co{grid-template-columns:1fr}.co-side{order:-1;border-left:0;border-bottom:1px solid var(--line);padding-top:28px;padding-bottom:28px}.co-side-in{position:static}.cgrid,.cgrid.three{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+ <div class="hwrap">
+  <nav class="nav" id="nav">
+   <a href="#shop-new" data-k="new">New In</a>
+   <a href="#shop-women" data-k="women">Women</a>
+   <a href="#shop-men" data-k="men">Men</a>
+   <a href="#shop-bags" data-k="bags">Bags</a>
+   <a href="#shop-shoes" data-k="shoes">Shoes</a>
+   <a href="#shop-accessories" data-k="accessories">Accessories</a>
+  </nav>
+  <button class="burger up" id="burger">Menu</button>
+  <a href="#home" class="logo">ELORA</a>
+  <div class="tools">
+   <button id="openSearch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span class="lbltxt">Search</span></button>
+   <a href="#wishlist" class="up" style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/></svg><span class="count" id="wcount">0</span></a>
+   <button id="openBag"><span class="lbltxt">Bag</span><span class="count" id="bcount">0</span></button>
+  </div>
+ </div>
+</header>
+<div class="mobile-nav" id="mnav">
+ <button class="up" id="mclose" style="position:absolute;top:24px;right:24px">Close</button>
+ <a href="#shop-new">New In</a><a href="#shop-women">Women</a><a href="#shop-men">Men</a><a href="#shop-bags">Bags</a><a href="#shop-shoes">Shoes</a><a href="#shop-accessories">Accessories</a><a href="#maison">La Maison</a>
+</div>
+
+<main id="app"></main>
+
+<section class="news">
+ <h2>La Lettre</h2>
+ <p>Collections, journal stories and private sales — first, and rarely.</p>
+ <form id="newsForm"><input type="email" required placeholder="Your email address"><button class="up">Subscribe →</button></form>
+</section>
+<footer>
+ <div class="fgrid">
+  <div><div class="flogo">ELORA</div><p style="margin-top:18px;max-width:340px;line-height:1.7;opacity:.75;font-size:14px">A Mediterranean maison of light, linen and colour. Designed in Marseille, made slowly in small European ateliers.</p></div>
+  <div><h5>Shop</h5><ul><li><a href="#shop-new">New In</a></li><li><a href="#shop-women">Women</a></li><li><a href="#shop-men">Men</a></li><li><a href="#shop-bags">Bags</a></li><li><a href="#shop-shoes">Shoes</a></li></ul></div>
+  <div><h5>Maison</h5><ul><li><a href="#maison">Our story</a></li><li><a href="#journal">Journal</a></li><li>Ateliers</li><li>Careers</li></ul></div>
+  <div><h5>Client Care</h5><ul><li>Shipping</li><li>Returns</li><li>Size guide</li><li>Contact: care@elora.example</li></ul></div>
+ </div>
+ <div class="fbottom"><span>© 2026 Elora. A fictional brand built as a design study. Photography via <a href="https://unsplash.com" target="_blank" rel="noopener" style="text-decoration:underline">Unsplash</a>.</span><span>Instagram · Pinterest · TikTok</span></div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="fpanel" id="fpanel"></aside>
+<aside class="drawer" id="drawer">
+ <div class="dhead"><span class="up">Your Bag (<span id="dcount">0</span>)</span><button class="up" id="closeBag">Close</button></div>
+ <div class="dbody" id="dbody"></div>
+ <div class="dfoot" id="dfoot"></div>
+</aside>
+<div class="search" id="search">
+ <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span class="up" style="color:var(--mute)">Search the maison</span><button class="up" id="closeSearch">Close</button></div>
+ <input id="q" placeholder="Dresses, bags, linen…" autocomplete="off">
+ <div class="sug" id="sug"></div>
+ <div class="sres" id="sres"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const shade=(hex,a)=>{const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(a<0?v*(1+a):v+(255-v)*a)));return'#'+((1<<24)|(f(r)<<16)|(f(g)<<8)|f(b)).toString(16).slice(1)};
+const eur=n=>'$'+n.toLocaleString('en-US');
+const store={get(k,d){try{return JSON.parse(localStorage.getItem('elora_'+k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem('elora_'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- colours ---------- */
+const COL={
+ Ivory:'#f3ede1',Sand:'#d9c3a0',Terracotta:'#c4693b',Sun:'#efb93f',Sky:'#9cc4d6',Navy:'#1f2f4a',Olive:'#7b7d4a',
+ Black:'#1d1d1d',White:'#fbfbf8',Rose:'#e7a9a0',Lilac:'#b9a7cf',Brown:'#7a4b2e',Green:'#4f7a5a',Coral:'#ec7c5f',Burgundy:'#7a2f3a',Stripe:'#ffffff'
+};
+const BGS=['#efe7da','#e9dfcf','#e3e8e6','#f1e6d6','#e8e1d3','#ece4dc'];
+
+/* ---------- articles ---------- */
+const P=[
+ // Ready-to-wear — women
+ [1,'Sunlight Dress','Dress','women','rtw',590,'Sun',['Sun','Ivory','Terracotta'],'New','A bias-cut midi dress in fluid viscose crêpe with a sculpted halter neckline and an open back that falls just below the shoulder blades.','100% viscose crêpe'],
+ [2,'Shoreline Dress','Dress','women','rtw',720,'Sky',['Sky','White'],'New','Draped maxi dress with a twisted bodice and an asymmetric hem that moves like the tide. Lined to the hip.','92% viscose, 8% elastane'],
+ [3,'Fig Dress','Dress','women','rtw',540,'Terracotta',['Terracotta','Black'],'','Short knitted dress with cut-out waist and ribbed straps. Fitted, stretch and made for long dinners outside.','80% viscose, 20% polyamide'],
+ [4,'Cabana Dress','Dress','women','rtw',650,'Ivory',['Ivory','Sand'],'','Linen poplin shirt dress with oversized pleated sleeves and a removable self-tie belt.','100% linen'],
+ [5,'Lavender Dress','Dress','women','rtw',610,'Lilac',['Lilac','Rose'],'Bestseller','Bias-cut slip dress in washed satin with adjustable straps and a cowl front.','100% acetate satin'],
+ [6,'Beach Shirt','Shirt','women','rtw',390,'Stripe',['Stripe','Sky','White'],'','Boxy short-sleeved shirt in striped cotton poplin with a camp collar and mother-of-pearl buttons.','100% cotton poplin'],
+ [7,'Cloud Shirt','Shirt','women','rtw',420,'White',['White','Sky'],'New','Oversized shirt in sheer cotton voile with dropped shoulders and a curved, longline hem.','100% cotton voile'],
+ [8,'Seashell Top','Top','women','rtw',260,'Coral',['Coral','Ivory','Black'],'','Cropped bustier top with a curved neckline, boning and a hidden back zip.','100% cotton canvas'],
+ [9,'Petal Top','Top','women','rtw',230,'Rose',['Rose','Sun'],'','Knitted bralette top with gathered cups and thin rib ties at the back.','100% organic cotton'],
+ [10,'Tide Skirt','Skirt','women','rtw',380,'Navy',['Navy','Sand'],'','A-line midi skirt in structured cotton twill with deep side pockets.','100% cotton twill'],
+ [11,'Sandbar Skirt','Skirt','women','rtw',340,'Sand',['Sand','Olive'],'Bestseller','Wrap mini skirt in crinkled linen with a single knot fastening at the hip.','100% linen'],
+ [12,'Wide-Leg Trouser','Trousers','women','rtw',460,'Ivory',['Ivory','Black','Sand'],'','High-waisted wide-leg trousers with double front pleats and a pressed crease.','100% wool gabardine'],
+ [13,'Pebble Trouser','Trousers','women','rtw',430,'Olive',['Olive','Brown'],'','Relaxed drawstring trousers in heavyweight linen with a soft barrel leg.','100% linen'],
+ [14,'Seafoam Sweater','Knitwear','women','rtw',480,'Sky',['Sky','Ivory'],'New','Cropped open-knit jumper in a soft cotton tape yarn with exaggerated cuffs.','100% cotton'],
+ [15,'Dune Cardigan','Knitwear','women','rtw',450,'Sand',['Sand','Rose'],'','Fitted cardigan with sculpted shoulders and oversized pearl-effect buttons.','70% wool, 30% cashmere'],
+ [16,'Northwind Blazer','Jacket','women','rtw',890,'Black',['Black','Navy'],'','Tailored single-breasted jacket with a strong shoulder and a nipped waist.','100% virgin wool'],
+ // Ready-to-wear — men
+ [18,'Fisherman Shirt','Shirt','men','rtw',360,'Sky',['Sky','White','Stripe'],'Bestseller','Short-sleeved linen shirt with a Cuban collar and a single patch pocket.','100% linen'],
+ [19,'Breeze Overshirt','Shirt','men','rtw',380,'Olive',['Olive','Sand'],'','Long-sleeved overshirt in washed cotton canvas with flap pockets.','100% cotton canvas'],
+ [20,'Coastline Polo','Knitwear','men','rtw',320,'Ivory',['Ivory','Navy','Terracotta'],'New','Short-sleeved knitted polo with an open collar in a fine, breathable cotton.','100% cotton'],
+ [21,'Homestead Sweater','Knitwear','men','rtw',490,'Brown',['Brown','Sand'],'','Heavy chunky jumper in a brushed wool blend with dropped shoulders.','80% wool, 20% alpaca'],
+ [22,'Harbor Trouser','Trousers','men','rtw',420,'Sand',['Sand','Navy','Black'],'','Straight-leg pleated trousers in light cotton with a relaxed seat.','100% cotton'],
+ [23,'Bay Short','Shorts','men','rtw',260,'Navy',['Navy','Sand','Olive'],'','Tailored shorts with a flat front, side adjusters and a 6-inch inseam.','100% linen'],
+ [24,'Swim Trunk','Swimwear','men','rtw',180,'Coral',['Coral','Sky'],'','Quick-dry swim shorts with mesh lining and a back zip pocket.','Recycled polyester'],
+ [25,'Mariner Jacket','Jacket','men','rtw',780,'Navy',['Navy','Ivory'],'','Unstructured work jacket in cotton-linen twill with horn buttons.','55% cotton, 45% linen'],
+ [26,'Canyon Bomber','Jacket','men','rtw',860,'Olive',['Olive','Black'],'New','Boxy suede bomber with a ribbed collar and two-way zip.','100% goat suede'],
+ // Bags
+ [27,'Mini Pebble Bag','Mini bag','unisex','bags',520,'Terracotta',['Terracotta','Sun','Black','Ivory'],'Bestseller','A palm-sized top-handle bag in smooth calfskin with a gold-tone bar and a detachable strap.','100% calf leather'],
+ [28,'Pebble Bag','Mini bag','women','bags',690,'Sky',['Sky','Rose'],'','The medium version of our signature pebble — fits a phone, keys and a lipstick.','100% calf leather'],
+ [29,'Market Basket','Tote','unisex','bags',480,'Sand',['Sand','Ivory'],'New','Woven raffia tote with leather handles and an internal zip pouch.','Raffia, calf leather'],
+ [30,'Harbor Tote','Tote','men','bags',620,'Black',['Black','Brown'],'','Oversized tote in grained leather with an unlined, featherlight construction.','100% grained calf leather'],
+ [31,'Moon Bag','Shoulder bag','women','bags',750,'Ivory',['Ivory','Black','Lilac'],'','Curved crescent shoulder bag with a padded strap and magnetic closure.','100% lambskin'],
+ [32,'Slim Baguette','Shoulder bag','women','bags',640,'Green',['Green','Brown'],'','Slim baguette bag in patent leather with a hand-polished edge.','100% patent calf leather'],
+ // Shoes
+ [33,'Round Mule','Heeled mule','women','shoes',560,'Black',['Black','Ivory'],'','Square-toe mule on a sculpted 70mm heel with a soft leather lining.','Calf leather, leather sole'],
+ [34,'Sunny Slingback','Pump','women','shoes',590,'Sun',['Sun','Rose'],'New','Pointed slingback pump with a 50mm kitten heel and a gold-tone ring.','Calf leather'],
+ [35,'Beach Sandal','Sandal','unisex','shoes',380,'Brown',['Brown','Ivory'],'Bestseller','Flat leather sandal with crossed straps and a moulded footbed.','Vegetable-tanned leather'],
+ [36,'Boardwalk Loafer','Loafer','men','shoes',520,'Brown',['Brown','Black'],'','Soft unlined loafer with a hand-stitched apron and a rubber-pad sole.','Suede, rubber'],
+ // Accessories
+ [37,'Sunny Bucket Hat','Hat','unisex','accessories',190,'Ivory',['Ivory','Sun','Sky'],'','Bucket hat in cotton canvas with a topstitched brim and tonal embroidery.','100% cotton'],
+ [38,'Wide-Brim Hat','Hat','women','accessories',310,'Sand',['Sand','Black'],'','Wide-brim raffia hat with a grosgrain band and a soft crown.','100% raffia'],
+ [39,'Round Sunglasses','Sunglasses','unisex','accessories',280,'Black',['Black','Brown'],'','Oversized round acetate frames with gradient lenses and UV400 protection.','Acetate'],
+ [40,'Cat-Eye Sunglasses','Sunglasses','women','accessories',290,'Coral',['Coral','Ivory'],'New','Sharp cat-eye acetate frames with gold-tone temple detailing.','Acetate, metal'],
+ [41,'Pearl Earrings','Earrings','women','accessories',240,'Sun',['Sun','White'],'','Asymmetric earrings: a polished gold-tone disc and a single freshwater pearl.','Gold-plated brass, pearl'],
+ [42,'Coastal Silk Scarf','Scarf','unisex','accessories',220,'Sky',['Sky','Terracotta'],'','Silk twill square with a hand-rolled edge and our sun-and-sea print.','100% silk twill'],
+ [43,'Ring Belt','Belt','unisex','accessories',260,'Brown',['Brown','Black'],'','Leather belt with a large round gold-tone ring buckle.','Calf leather, brass'],
+ [44,'Card Case','Card holder','unisex','accessories',160,'Terracotta',['Terracotta','Black','Sky'],'','Compact card holder with four slots and an embossed sun.','100% calf leather'],
+ // Additions
+ [45,'Seaside Wrap Dress','Dress','women','rtw',640,'Coral',['Coral'],'New','Flutter-sleeve wrap dress in airy crêpe with a self-tie waist and a softly flared maxi skirt.','100% viscose crêpe'],
+ [46,'Square-Neck Dress','Dress','women','rtw',580,'White',['White'],'','Fitted square-neck dress in textured cotton with thin straps and a straight midi hem.','98% cotton, 2% elastane'],
+ [47,'Eyelet Midi Dress','Dress','women','rtw',560,'Ivory',['Ivory'],'','Tiered midi dress in broderie anglaise cotton with a smocked bodice.','100% cotton'],
+ [48,'Linen Blouse','Shirt','women','rtw',340,'Ivory',['Ivory'],'','Relaxed short-sleeved blouse in washed linen with a gathered hem.','100% linen'],
+ [49,'Silk Camisole','Top','women','rtw',260,'Sky',['Sky'],'','Bias-cut camisole in sandwashed silk with fine adjustable straps.','100% silk'],
+ [50,'Ribbed Tank','Top','women','rtw',140,'Black',['Black'],'','Second-skin tank in a soft rib knit with a scooped neckline.','95% cotton, 5% elastane'],
+ [51,'A-Line Skirt','Skirt','women','rtw',380,'Black',['Black'],'','Knee-length A-line skirt in crisp cotton twill with a concealed side zip.','100% cotton twill'],
+ [52,'Denim Mini Skirt','Skirt','women','rtw',280,'Sky',['Sky'],'','Low-rise mini skirt in rigid washed denim with a raw hem.','100% cotton denim'],
+ [53,'Palazzo Trouser','Trousers','women','rtw',470,'Black',['Black'],'New','High-rise palazzo trousers in fluid crêpe with a wide, floor-grazing leg.','100% viscose crêpe'],
+ [54,'Tailored Short','Shorts','women','rtw',290,'Sand',['Sand'],'','Pleated high-waisted shorts in lightweight suiting with a turn-up hem.','100% linen'],
+ [55,'Crochet Halter Top','Top','women','rtw',320,'Lilac',['Lilac'],'','Hand-crocheted halter top with a tie back and a scalloped edge.','100% organic cotton'],
+ [56,'Classic Trench','Jacket','women','rtw',980,'Olive',['Olive'],'','Double-breasted trench coat in water-resistant cotton gabardine with a belted waist.','100% cotton gabardine'],
+ [58,'Printed Kaftan','Dress','women','rtw',560,'Green',['Green'],'','Floor-length kaftan in silk voile with a contrast border print.','100% silk voile'],
+ [59,'Oxford Shirt','Shirt','men','rtw',290,'White',['White'],'','Classic button-down shirt in a soft brushed Oxford cotton.','100% cotton Oxford'],
+ [60,'Printed Camp Shirt','Shirt','men','rtw',330,'White',['White'],'','Short-sleeved camp-collar shirt in a micro-print cotton poplin.','100% cotton poplin'],
+ [61,'Double-Breasted Suit Jacket','Jacket','men','rtw',920,'Ivory',['Ivory'],'New','Double-breasted jacket in a light pinstripe wool with peak lapels.','100% virgin wool'],
+ [62,'Essential Tee','Top','men','rtw',90,'White',['White'],'','Heavyweight crew-neck T-shirt in combed cotton jersey.','100% organic cotton'],
+ [63,'Henley Knit','Knitwear','men','rtw',260,'Black',['Black'],'','Long-sleeved henley in a fine-gauge merino with a three-button placket.','100% merino wool'],
+ [64,'Navy Blazer','Jacket','men','rtw',780,'Navy',['Navy'],'','Single-breasted blazer in hopsack wool with patch pockets.','100% wool'],
+ [65,'Denim Jacket','Jacket','men','rtw',540,'Sky',['Sky'],'','Classic trucker jacket in a vintage-wash denim.','100% cotton denim'],
+ [66,'Chino Short','Shorts','men','rtw',210,'Sand',['Sand'],'','Flat-front chino shorts in a garment-dyed cotton twill.','98% cotton, 2% elastane'],
+ [67,'Linen Drawstring Trouser','Trousers','men','rtw',360,'White',['White'],'','Relaxed drawstring trousers in washed Belgian linen.','100% linen'],
+ [68,'Straight-Leg Jean','Trousers','men','rtw',380,'Sky',['Sky'],'','Straight-leg five-pocket jeans in a light-wash selvedge denim.','100% cotton selvedge denim'],
+ [69,'Canvas Beach Tote','Tote','unisex','bags',290,'Sand',['Sand'],'','Oversized tote in heavy cotton canvas with long shoulder handles.','100% cotton canvas'],
+ [70,'Leather Backpack','Backpack','unisex','bags',780,'Burgundy',['Burgundy'],'New','Structured backpack in pebbled leather with a padded laptop sleeve.','100% calf leather'],
+ [71,'Leather Satchel','Satchel','men','bags',820,'Brown',['Brown'],'','Vintage-style satchel in waxed leather with twin buckle straps.','100% waxed leather'],
+ [72,'Envelope Clutch','Clutch','women','bags',420,'Brown',['Brown'],'','Slim envelope clutch in smooth leather with a magnetic flap.','100% calf leather'],
+ [73,'Bucket Bag','Shoulder bag','women','bags',610,'Terracotta',['Terracotta'],'','Soft bucket bag in suede with a drawstring top and a leather shoulder strap.','100% goat suede'],
+ [74,'Saddle Crossbody','Crossbody','unisex','bags',360,'Brown',['Brown'],'','Compact saddle-shaped crossbody with an adjustable strap.','100% calf leather'],
+ [75,'Suede Espadrille','Espadrille','unisex','shoes',240,'Terracotta',['Terracotta'],'','Classic espadrilles in soft suede on a hand-stitched jute sole.','Suede, jute, rubber'],
+ [76,'Court Sneaker','Sneaker','unisex','shoes',420,'White',['White'],'New','Low-top leather sneaker with a suede toe and a gum rubber sole.','Calf leather, suede, rubber'],
+ [77,'Strappy Heel','Heeled sandal','women','shoes',540,'Sun',['Sun'],'','Metallic strappy sandal on a slim 90mm heel.','Metallic leather'],
+ [78,'Suede Loafer','Loafer','women','shoes',450,'Sky',['Sky'],'','Unlined suede loafer with a gold-tone horsebit and a stacked leather heel.','Suede, leather sole'],
+ [79,'Chelsea Boot','Boot','men','shoes',690,'Brown',['Brown'],'','Burnished leather Chelsea boot with elastic side panels.','Calf leather, leather sole'],
+ [80,'Braided Slide','Sandal','unisex','shoes',260,'Sand',['Sand'],'','Flat slide sandal with a hand-braided upper and a cushioned footbed.','Leather, rubber'],
+ [81,'Gold Hoop Earrings','Earrings','women','accessories',210,'Sun',['Sun'],'','Chunky sculpted hoops in polished gold-plated brass.','Gold-plated brass'],
+ [82,'Chain Necklace','Necklace','unisex','accessories',320,'Sun',['Sun'],'','Heavy curb-chain necklace with a toggle clasp.','Gold-plated brass'],
+ [83,'Leather Strap Watch','Watch','unisex','accessories',640,'Brown',['Brown'],'','Minimal steel watch with a white dial and a brown leather strap.','Stainless steel, leather'],
+ [84,'Stacking Rings','Ring','women','accessories',280,'Sun',['Sun'],'','Set of five slim gold-tone rings to wear together or apart.','Gold-plated brass'],
+ [85,'Tiered Maxi Dress','Dress','women','rtw',680,'Green',['Green'],'New','Flowing tiered maxi dress in light crepe with a V-neck and blouson sleeves.','100% viscose crepe'],
+ [86,'Satin Midi Skirt','Skirt','women','rtw',360,'Black',['Black'],'','Bias-cut midi skirt in liquid satin with an elasticated waist.','100% acetate satin'],
+ [87,'Linen Blazer','Jacket','women','rtw',620,'Navy',['Navy'],'','Relaxed single-breasted blazer in washed linen with patch pockets.','100% linen'],
+ [88,'Satin Wrap Blouse','Shirt','women','rtw',340,'Black',['Black'],'','Draped wrap blouse in fluid satin with a tie at the waist.','100% acetate satin'],
+ [89,'Mandarin Collar Shirt','Shirt','women','rtw',290,'Black',['Black'],'','Crisp poplin shirt with a band collar and concealed placket.','100% cotton poplin'],
+ [90,'Belted Shirt Dress','Dress','women','rtw',520,'Terracotta',['Terracotta'],'New','Knee-length shirt dress with short sleeves and a self-tie belt.','100% cotton'],
+ [91,'Wrap Midi Skirt','Skirt','women','rtw',380,'Black',['Black'],'','Wrap midi skirt in crepe with a side tie and soft pleats.','100% viscose crepe'],
+ [92,'Chunky Knit Sweater','Knitwear','women','rtw',460,'Ivory',['Ivory'],'','Oversized chunky sweater in a soft wool blend with a slouchy roll neck.','70% wool, 30% alpaca'],
+ [93,'High-Rise Jean','Trousers','women','rtw',320,'Sky',['Sky'],'','High-rise straight jeans in a light vintage wash.','100% cotton denim'],
+ [94,'Printed Jumpsuit','Jumpsuit','women','rtw',560,'Brown',['Brown'],'','Sleeveless wide-leg jumpsuit in a printed crepe with a belted waist.','100% viscose'],
+ [95,'Sleeveless Maxi Dress','Dress','women','rtw',540,'Black',['Black'],'','Floor-length sleeveless dress in a soft jersey with a scoop neck.','95% viscose, 5% elastane'],
+ [96,'Lace Camisole','Top','women','rtw',240,'White',['White'],'','Delicate lace camisole with a scalloped neckline and fine straps.','100% cotton lace'],
+ [97,'Cargo Trouser','Trousers','women','rtw',390,'Lilac',['Lilac'],'','Relaxed cargo trousers in cotton twill with cuffed ankles.','100% cotton twill'],
+ [98,'Suede Shirt Jacket','Jacket','women','rtw',890,'Terracotta',['Terracotta'],'New','Boxy shirt jacket in soft suede with snap buttons.','100% goat suede'],
+ [99,'Floral Midi Dress','Dress','women','rtw',590,'Ivory',['Ivory'],'','Tiered midi dress in a hand-painted floral voile.','100% cotton voile'],
+ [100,'Linen Overshirt','Shirt','men','rtw',340,'Olive',['Olive'],'','Boxy overshirt in garment-dyed linen with a camp collar.','100% linen'],
+ [101,'Striped Tee','Top','men','rtw',120,'Navy',['Navy'],'','Breton-striped crew-neck tee in heavyweight cotton jersey.','100% cotton'],
+ [102,'Slim Wool Trouser','Trousers','men','rtw',420,'Black',['Black'],'','Slim tapered trousers in a lightweight tropical wool.','100% wool'],
+ [103,'Wool Overcoat','Jacket','men','rtw',980,'Ivory',['Ivory'],'','Single-breasted overcoat in a light wool-cashmere blend.','90% wool, 10% cashmere'],
+ [104,'Bomber Jacket','Jacket','men','rtw',620,'Terracotta',['Terracotta'],'New','Classic bomber in a matte technical fabric with ribbed trims.','100% recycled polyamide'],
+ [105,'Linen Short','Shorts','men','rtw',230,'White',['White'],'','Relaxed linen shorts with a drawstring waist and side pockets.','100% linen'],
+ [106,'Resort Shirt','Shirt','men','rtw',310,'Navy',['Navy'],'','Long-sleeved shirt in a fluid viscose with a relaxed fit.','100% viscose'],
+ [107,'Fine Turtleneck','Knitwear','men','rtw',340,'Ivory',['Ivory'],'','Fine-gauge turtleneck in merino wool for layering.','100% merino wool'],
+ [108,'Field Jacket','Jacket','men','rtw',720,'Black',['Black'],'','Four-pocket field jacket in waxed cotton.','100% waxed cotton'],
+ [109,'Wide Pleated Trouser','Trousers','men','rtw',440,'Sand',['Sand'],'','High-waisted wide-leg trousers with double pleats.','100% wool'],
+ [110,'Piqué Polo','Top','men','rtw',180,'Sky',['Sky'],'','Short-sleeved polo in breathable cotton piqué.','100% cotton piqué'],
+ [111,'Striped Crewneck','Knitwear','men','rtw',360,'Navy',['Navy'],'','Crew-neck sweater in a soft cotton-wool with tonal stripes.','60% cotton, 40% wool'],
+ [112,'Leather Biker Jacket','Jacket','men','rtw',1180,'Black',['Black'],'','Classic biker jacket in supple lambskin with silver hardware.','100% lambskin'],
+ [113,'Brushed Hoodie','Knitwear','men','rtw',290,'Sand',['Sand'],'','Heavyweight hoodie in brushed organic cotton fleece.','100% organic cotton'],
+ [114,'Navy Suit','Jacket','men','rtw',1240,'Navy',['Navy'],'','Two-piece suit in a fine Italian wool with a slim fit.','100% wool'],
+ [115,'Puffer Tote','Tote','unisex','bags',420,'Sky',['Sky'],'New','Quilted puffer tote in a soft recycled nylon.','Recycled nylon'],
+ [116,'Everyday Tote','Tote','unisex','bags',260,'Black',['Black'],'','Large canvas tote with leather-trimmed handles.','Cotton canvas, leather'],
+ [117,'Studded Shoulder Bag','Shoulder bag','women','bags',720,'Black',['Black'],'','Structured shoulder bag in smooth leather with stud detailing.','100% calf leather'],
+ [118,'Half-Moon Crossbody','Crossbody','unisex','bags',340,'Sand',['Sand'],'','Curved crossbody bag in pebbled leather with an adjustable strap.','100% calf leather'],
+ [119,'Woven Basket Bag','Tote','women','bags',280,'Sand',['Sand'],'','Hand-woven basket bag with rolled leather handles.','Rattan, leather'],
+ [120,'Leather Belt Bag','Crossbody','unisex','bags',320,'Brown',['Brown'],'','Compact belt bag in smooth leather, worn at the waist or across the body.','100% calf leather'],
+ [121,'Leather Briefcase','Satchel','men','bags',890,'Brown',['Brown'],'','Slim briefcase in vegetable-tanned leather with a padded laptop sleeve.','100% vegetable-tanned leather'],
+ [122,'Chain Shoulder Bag','Shoulder bag','women','bags',680,'Black',['Black'],'','Small flap bag in smooth leather on a gold-tone chain strap.','100% calf leather'],
+ [123,'Straw Beach Tote','Tote','women','bags',240,'Sand',['Sand'],'','Open straw tote with leather handles and a removable pouch.','Straw, leather'],
+ [124,'Top-Handle Bag','Mini bag','women','bags',620,'Rose',['Rose'],'','Ladylike top-handle bag in soft pink leather with a detachable strap.','100% calf leather'],
+ [125,'Weekender Holdall','Duffel','unisex','bags',840,'Brown',['Brown'],'','Spacious holdall in leather and canvas with a shoulder strap.','Leather, canvas'],
+ [126,'Mini Crossbody','Crossbody','women','bags',380,'White',['White'],'','Small structured crossbody with a buckle flap.','100% calf leather'],
+ [127,'Structured Tote','Tote','women','bags',760,'Brown',['Brown'],'','Structured leather tote with a gold-tone fastening.','100% calf leather'],
+ [128,'Sequin Evening Bag','Clutch','women','bags',450,'Sun',['Sun'],'','Fringed evening bag in shimmering sequins.','Sequins, satin'],
+ [129,'Leather Messenger','Satchel','men','bags',640,'Brown',['Brown'],'','Classic messenger bag in tan leather with a wide strap.','100% calf leather'],
+ [130,'Knee-High Boot','Boot','women','shoes',890,'Black',['Black'],'New','Slouchy knee-high boot in soft leather on a block heel.','Calf leather'],
+ [131,'Platform Sandal','Sandal','women','shoes',420,'Burgundy',['Burgundy'],'','Chunky platform sandal with a buckled ankle strap.','Leather, rubber'],
+ [132,'Mary Jane','Flat','women','shoes',480,'Black',['Black'],'','Patent Mary Jane with a round toe and single strap.','Patent leather'],
+ [133,'Derby Shoe','Loafer','men','shoes',560,'Brown',['Brown'],'','Polished leather derby with a Goodyear-welted sole.','Calf leather'],
+ [134,'Canvas Sneaker','Sneaker','unisex','shoes',180,'White',['White'],'','Clean low-top sneaker in cotton canvas.','Canvas, rubber'],
+ [135,'Strappy Block Heel','Heeled sandal','women','shoes',520,'Rose',['Rose'],'','Strappy sandal on a sculpted block heel.','Calf leather'],
+ [136,'Ankle Boot','Boot','women','shoes',640,'Black',['Black'],'','Chelsea ankle boot with a lug sole.','Calf leather, rubber'],
+ [137,'Buckle Sandal','Sandal','unisex','shoes',280,'Brown',['Brown'],'','Two-strap sandal with buckles and a cork footbed.','Leather, cork'],
+ [138,'Retro Runner','Sneaker','unisex','shoes',320,'Coral',['Coral'],'','Retro-inspired runner in suede and mesh.','Suede, mesh, rubber'],
+ [139,'Block Heel Mule','Heeled mule','women','shoes',460,'Terracotta',['Terracotta'],'','Square-toe mule on a low block heel.','Calf leather'],
+ [140,'Boat Shoe','Loafer','men','shoes',340,'Brown',['Brown'],'','Classic boat shoe in oiled leather with leather laces.','Leather, rubber'],
+ [141,'Western Boot','Boot','unisex','shoes',780,'Brown',['Brown'],'','Hand-stitched western boot with a stacked heel.','Calf leather'],
+ [142,'Thong Sandal','Sandal','women','shoes',220,'Black',['Black'],'','Minimal thong sandal on a flat leather sole.','Leather'],
+ [143,'Pointed Slingback','Flat','women','shoes',420,'Black',['Black'],'','Pointed-toe slingback flat in smooth leather.','Calf leather'],
+ [144,'Wedge Sandal','Heeled sandal','women','shoes',380,'Terracotta',['Terracotta'],'','Wedge sandal with a woven upper.','Leather, cork'],
+ [145,'Layered Necklace','Necklace','women','accessories',260,'Sun',['Sun'],'New','Two fine gold-tone chains layered with a pearl drop.','Gold-plated brass, pearl'],
+ [146,'Aviator Sunglasses','Sunglasses','unisex','accessories',290,'Sun',['Sun'],'','Classic metal aviators with gradient lenses.','Metal'],
+ [147,'Paisley Bandana','Scarf','unisex','accessories',90,'Navy',['Navy'],'','Cotton bandana in a traditional paisley print.','100% cotton'],
+ [148,'Felt Fedora','Hat','unisex','accessories',240,'Black',['Black'],'','Wide-brim fedora in wool felt with a grosgrain band.','100% wool felt'],
+ [149,'Leather Gloves','Gloves','unisex','accessories',190,'Black',['Black'],'','Lined leather gloves in soft nappa.','Nappa leather'],
+ [150,'Fine Gold Bracelet','Bracelet','women','accessories',180,'Sun',['Sun'],'','Delicate chain bracelet in gold vermeil.','Gold vermeil'],
+ [151,'Ribbed Beanie','Hat','unisex','accessories',90,'Navy',['Navy'],'','Ribbed beanie in a soft merino wool.','100% merino wool'],
+ [152,'Cashmere Scarf','Scarf','unisex','accessories',320,'Sand',['Sand'],'','Oversized scarf in pure cashmere with fringed ends.','100% cashmere'],
+ [153,'Silver Bracelet Set','Bracelet','women','accessories',160,'White',['White'],'','Set of three slim sterling silver bracelets.','Sterling silver'],
+ [154,'Cotton Cap','Hat','unisex','accessories',80,'White',['White'],'','Six-panel cap in washed cotton twill.','100% cotton'],
+ [155,'Gold Drop Earrings','Earrings','women','accessories',190,'Sun',['Sun'],'','Sculpted gold-tone drop earrings.','Gold-plated brass'],
+ [156,'Leather Key Fob','Card holder','unisex','accessories',70,'Brown',['Brown'],'','Leather key fob with a polished ring.','Leather, brass'],
+ [157,'Steel Watch','Watch','unisex','accessories',720,'White',['White'],'','Minimal stainless-steel watch with a link bracelet.','Stainless steel'],
+ [158,'Hair Clip','Hair clip','women','accessories',60,'Black',['Black'],'','Sleek hair clip in polished acetate.','Acetate'],
+ [159,'Leather Belt','Belt','unisex','accessories',190,'Terracotta',['Terracotta'],'','Wide leather belt with a squared silver buckle.','Calf leather, metal']
+].map(a=>({id:a[0],name:a[1],type:a[2],g:a[3],cat:a[4],price:a[5],color:a[6],colors:a[7],badge:a[8],desc:a[9],comp:a[10]}));
+
+const SIZES={rtw:['XS','S','M','L','XL'],shoes:['5','6','7','8','9','10','11','12','13'],bags:['One size'],accessories:['One size']};
+
+/* ---------- product illustration (inline SVG) ---------- */
+function shape(t,c,id){
+ const d=shade(c,-.28),l=shade(c,.35),st=`stroke="${d}" stroke-width="1.6" fill="none" stroke-linecap="round"`;
+ const stripe=c==='#ffffff';
+ const fill=stripe?`url(#st${id})`:c;
+ const S={
+ 'Dress':`<path d="M126 58 Q150 70 174 58 L180 118 Q188 140 232 334 Q150 356 68 334 Q112 140 120 118 Z" fill="${fill}"/><path d="M128 58 L134 26 M172 58 L166 26" ${st}/><path d="M120 120 Q150 132 180 120" ${st}/><path d="M138 140 Q128 240 112 336 M162 140 Q174 240 192 338" stroke="${d}" stroke-width="1" opacity=".35" fill="none"/>`,
+ 'Shirt':`<path d="M108 74 L132 60 Q150 76 168 60 L192 74 L244 116 L224 156 L196 136 L198 322 L102 322 L104 136 L76 156 L56 116 Z" fill="${fill}"/><path d="M132 60 L150 92 L168 60" ${st}/><path d="M150 92 L150 320" ${st}/>${[118,158,198,238,278].map(y=>`<circle cx="150" cy="${y}" r="2.6" fill="${d}"/>`).join('')}<rect x="164" y="132" width="22" height="24" ${st}/>`,
+ 'Top':`<path d="M100 150 Q150 122 200 150 L206 236 Q150 250 94 236 Z" fill="${fill}"/><path d="M118 140 L126 92 M182 140 L174 92" ${st}/><path d="M100 150 Q125 170 150 150 Q175 170 200 150" ${st}/>`,
+ 'Skirt':`<path d="M112 98 L188 98 L230 306 Q150 324 70 306 Z" fill="${fill}"/><rect x="112" y="92" width="76" height="14" fill="${d}"/><path d="M134 110 L118 310 M166 110 L182 312" stroke="${d}" stroke-width="1" opacity=".35"/>`,
+ 'Trousers':`<path d="M104 58 L196 58 L214 344 L164 344 L150 146 L136 344 L86 344 Z" fill="${fill}"/><rect x="104" y="56" width="92" height="14" fill="${d}"/><path d="M128 72 L120 340 M172 72 L180 340" stroke="${l}" stroke-width="2" opacity=".6"/><path d="M150 70 L150 146" ${st}/>`,
+ 'Shorts':`<path d="M98 116 L202 116 L216 252 L160 258 L150 172 L140 258 L84 252 Z" fill="${fill}"/><rect x="98" y="112" width="104" height="14" fill="${d}"/><path d="M150 126 L150 172" ${st}/>`,
+ 'Knitwear':`<path d="M106 80 Q150 100 194 80 L234 110 L254 282 L226 288 L202 156 L200 312 L100 312 L98 156 L74 288 L46 282 L66 110 Z" fill="${fill}"/><path d="M106 80 Q150 104 194 80" stroke="${d}" stroke-width="5" fill="none"/>${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>`<path d="M${104+i*8.5} 296 L${104+i*8.5} 312" stroke="${d}" stroke-width="1.2" opacity=".5"/>`).join('')}<path d="M50 270 L76 274 M224 274 L252 270" stroke="${d}" stroke-width="5"/>`,
+ 'Jacket':`<path d="M104 72 L134 58 L150 70 L166 58 L196 72 L236 110 L254 296 L226 300 L204 160 L204 326 L96 326 L96 160 L74 300 L46 296 L64 110 Z" fill="${fill}"/><path d="M134 58 L126 150 L150 210 L174 150 L166 58" fill="${d}" opacity=".35"/><path d="M150 210 L150 326" ${st}/><circle cx="156" cy="236" r="3" fill="${d}"/><circle cx="156" cy="274" r="3" fill="${d}"/><path d="M112 262 L138 262 M162 262 L188 262" ${st}/>`,
+ 'Swimwear':`<path d="M118 92 Q150 112 182 92 L190 180 Q178 230 196 290 Q150 270 104 290 Q122 230 110 180 Z" fill="${fill}"/><path d="M122 92 L130 52 M178 92 L170 52" ${st}/><circle cx="188" cy="214" r="5" fill="${d}"/>`,
+ 'Mini bag':`<path d="M134 214 Q150 156 166 214" stroke="${d}" stroke-width="6" fill="none"/><rect x="108" y="212" width="84" height="64" rx="10" fill="${c}"/><rect x="108" y="212" width="84" height="20" rx="10" fill="${l}" opacity=".35"/><rect x="138" y="236" width="24" height="5" rx="2" fill="#d6b25a"/>`,
+ 'Tote':`<path d="M110 172 Q120 92 140 172 M160 172 Q180 92 190 172" stroke="${d}" stroke-width="7" fill="none"/><path d="M78 170 L222 170 L234 330 L66 330 Z" fill="${c}"/>${c===COL.Sand||c===COL.Ivory?[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M72 ${186+i*17} L228 ${186+i*17}" stroke="${d}" stroke-width="1" opacity=".4"/>`).join(''):''}<path d="M78 170 L222 170" stroke="${d}" stroke-width="4"/>`,
+ 'Shoulder bag':`<path d="M86 236 Q150 60 214 236" stroke="${d}" stroke-width="7" fill="none"/><path d="M70 230 Q150 210 230 230 Q226 300 150 304 Q74 300 70 230 Z" fill="${c}"/><path d="M76 238 Q150 222 224 238" stroke="${l}" stroke-width="2" opacity=".6" fill="none"/><rect x="142" y="250" width="16" height="6" rx="2" fill="#d6b25a"/>`,
+ 'Heeled mule':`<path d="M56 296 Q70 236 150 240 L212 252 Q236 254 240 282 L240 296 Z" fill="${c}"/><path d="M204 296 L232 296 L226 350 L212 350 Z" fill="${d}"/><path d="M56 296 L240 296" stroke="${d}" stroke-width="5"/>`,
+ 'Pump':`<path d="M50 296 Q80 266 140 266 Q170 248 204 244 Q232 244 238 270 L240 296 Z" fill="${c}"/><path d="M206 296 L230 296 L232 352 L224 352 Z" fill="${d}"/><path d="M50 296 L240 296" stroke="${d}" stroke-width="4"/><circle cx="214" cy="256" r="7" stroke="#d6b25a" stroke-width="3" fill="none"/>`,
+ 'Sandal':`<path d="M52 300 Q60 286 150 288 Q236 288 246 300 L246 308 L52 308 Z" fill="${d}"/><path d="M90 290 Q120 238 160 290 M130 290 Q170 236 206 290" stroke="${c}" stroke-width="11" fill="none"/>`,
+ 'Loafer':`<path d="M50 298 Q56 252 120 248 L200 246 Q244 246 246 280 L246 298 Z" fill="${c}"/><path d="M80 262 Q118 236 150 254" ${st}/><path d="M96 262 L132 262" stroke="${d}" stroke-width="5"/><path d="M50 298 L246 298" stroke="${d}" stroke-width="6"/>`,
+ 'Hat':`<ellipse cx="150" cy="234" rx="${'X'}" ry="22" fill="${d}"/><path d="M96 232 Q100 150 150 146 Q200 150 204 232 Z" fill="${c}"/><path d="M98 212 Q150 224 202 212" stroke="${d}" stroke-width="7" fill="none"/>`,
+ 'Sunglasses':`<circle cx="112" cy="220" r="34" fill="${c}"/><circle cx="188" cy="220" r="34" fill="${c}"/><circle cx="112" cy="220" r="26" fill="#2b2b2b" opacity=".85"/><circle cx="188" cy="220" r="26" fill="#2b2b2b" opacity=".85"/><path d="M146 214 Q150 206 154 214" stroke="${c}" stroke-width="5" fill="none"/><path d="M78 212 L54 206 M222 212 L246 206" stroke="${c}" stroke-width="5"/><circle cx="102" cy="210" r="7" fill="#fff" opacity=".25"/><circle cx="178" cy="210" r="7" fill="#fff" opacity=".25"/>`,
+ 'Earrings':`<circle cx="118" cy="190" r="6" fill="#c9a24b"/><circle cx="118" cy="232" r="30" fill="#e5c06a"/><circle cx="118" cy="232" r="30" fill="none" stroke="#b8902f" stroke-width="2"/><circle cx="188" cy="190" r="6" fill="#c9a24b"/><path d="M188 196 L188 218" stroke="#c9a24b" stroke-width="2"/><circle cx="188" cy="232" r="15" fill="#f6f1e6" stroke="#ddd3bf"/>`,
+ 'Scarf':`<g transform="rotate(45 150 210)"><rect x="80" y="140" width="140" height="140" fill="${c}"/><rect x="92" y="152" width="116" height="116" fill="none" stroke="#fff" stroke-width="3"/><circle cx="150" cy="210" r="26" fill="${COL.Sun}"/><path d="M98 244 Q124 232 150 244 T202 244" stroke="#fff" stroke-width="3" fill="none"/></g>`,
+ 'Belt':`<path d="M40 238 L200 238" stroke="${c}" stroke-width="22"/><circle cx="222" cy="238" r="26" stroke="#d6b25a" stroke-width="6" fill="none"/><path d="M248 238 L264 238" stroke="${c}" stroke-width="22"/>${[70,90,110].map(x=>`<circle cx="${x}" cy="238" r="3" fill="${d}"/>`).join('')}`,
+ 'Card holder':`<rect x="96" y="176" width="108" height="76" rx="6" fill="${c}"/><path d="M96 196 L204 196 M96 214 L204 214" stroke="${d}" stroke-width="1.4"/><circle cx="150" cy="236" r="8" fill="none" stroke="${l}" stroke-width="2"/>`
+ };
+ let s=S[t]||'';
+ if(t==='Hat') s=s.replace("'X'",'82').replace('rx="X"','rx="82"');
+ return s.replace('rx="X"','rx="82"');
+}
+const PH={85:['1609357605129-26f69add5d6e'],86:['1708363390932-15e8a29c0f56'],87:['1740710748146-a15d840d6f40'],88:['1704775983224-43dae05da876'],89:['1625910513413-c23b8bb81cba'],90:['1789110853833-bc1a883da2d6'],91:['1783379800024-ee203699d0b0'],92:['1574201635302-388dd92a4c3f'],93:['1598554747436-c9293d6a588f'],94:['1768803968246-5b8c7d04b722'],95:['1591804049767-cc6fdcafa76b'],96:['1517805686688-47dd930554b2'],97:['1789110520465-efc5ff05c95e'],98:['1710969490809-29fd46b2f032'],99:['1762154057377-cc9d3dd6900c'],100:['1591357037205-166318b51afd'],101:['1624124959348-86710fef6630'],102:['1642886512785-b5fee9faad7f'],103:['1636590416708-68a4867918f1'],104:['1591047139829-d91aecb6caea'],105:['1697319452360-ee47502e39f6'],106:['1763610452393-df10441c5f5d'],107:['1789141732594-207d0e61cdf8'],108:['1604821562226-879731efb3e5'],109:['1535530705774-695729778c55'],110:['1738523686727-d76db73a584c'],111:['1597143720583-bbbf44a6677d'],112:['1521223890158-f9f7c3d5d504'],113:['1564557287817-3785e38ec1f5'],114:['1617137968427-85924c800a22'],115:['1588122698107-836d3c39704c'],116:['1572196223922-d8b7e0ab0b4d'],117:['1702326626601-74d2e86922b4'],118:['1760624294514-ca40aafe3d96'],119:['1601330862030-1e08c703ac04'],120:['1630484179057-75e24310e2ff'],121:['1608731267464-c0c889c2ff92'],122:['1613482184847-44483b792eeb'],123:['1763056531605-4e75d78e5016'],124:['1585488763177-bde7d15fd3cf'],125:['1531938716357-224c16b5ace3'],126:['1609172795052-05bf80681031'],127:['1746880223690-359948154c53'],128:['1742626181963-1244929d2fdb'],129:['1710170622385-b5d7799a0a58'],130:['1763661300203-aa3e2702f510'],131:['1562273138-f46be4ebdf33'],132:['1622012339635-9b94f510443b'],133:['1632477575277-ade91dd5d8d5'],134:['1627361673902-c80df14aecdd'],135:['1578847857503-bed61186a57a'],136:['1733409896722-56913a549739'],137:['1625318880107-49baad6765fd'],138:['1560769629-975ec94e6a86'],139:['1718365837137-13cbd931068a'],140:['1510424708915-8f4900f5cb00'],141:['1759793499903-bfdba8350627'],142:['1569397693026-b29fe469c0fb'],143:['1789110518369-5e33011ac08c'],144:['1630386474440-8f2e6d752a98'],145:['1611652022419-a9419f74343d'],146:['1567473810954-507d59716c25'],147:['1557050751-fabbc420f962'],148:['1783543312130-2458092d0664'],149:['1645445470303-f96692cf1217'],150:['1775212429587-82779c6f8775'],151:['1648483092137-6e63796c8b06'],152:['1789845137167-5a6fed517e65'],153:['1761222101900-9c9e34fac2ce'],154:['1588850561407-ed78c282e89b'],155:['1671644730555-916aa8d8157f'],156:['1676488690948-8020c4851c50'],157:['1695345272166-4efd76dd7a21'],158:['1613405091285-2c3ece70ff2e'],159:['1666723043169-22e29545675c'],45:['1596783074918-c84cb06531ca'],46:['1631234764568-996fab371596'],47:['1772723347987-6b844fe2db5b'],48:['1713881676551-b16f22ce4719'],49:['1788961138963-2874477b72cd'],50:['1586536253499-fd4c3698dce2'],51:['1789110853398-539d78dd63bc'],52:['1709672262857-e7e6da8d1734'],53:['1789110519554-bdca2e4549e5'],54:['1789110853603-11504d948dde'],55:['1789111161049-d01ef1cb4974'],56:['1676716105765-e19fe6a01851'],57:['1581588636584-5c447d2c9d97'],58:['1753192108753-81be0db2f7fe'],59:['1621072156002-e2fccdc0b176'],60:['1626557981101-aae6f84aa6ff'],61:['1480429370139-e0132c086e2a'],62:['1581655353564-df123a1eb820'],63:['1794978316068-db5ddf107e73'],64:['1642886513133-cdbee2639272'],65:['1516257984-b1b4d707412e'],66:['1793083873431-24bcd8769e02'],67:['1657193638251-62eb207c8e31'],68:['1602293589930-45aad59ba3ab'],69:['1544816155-12df9643f363'],70:['1622560480654-d96214fdc887'],71:['1603219527847-24c87f552a77'],72:['1749294435694-ce3c586591e6'],73:['1613482184972-f9c1022d0928'],74:['1600857062241-98e5dba7f214'],75:['1565953198075-db265882ee68'],76:['1620989928625-08536e746255'],77:['1553545985-1e0d8781d5db'],78:['1678784973551-f38208de2529'],79:['1777987601423-f350ac29b3e9'],80:['1618615098938-84fc29796e76'],81:['1617038220319-276d3cfab638'],82:['1602173574767-37ac01994b2a'],83:['1557531365-e8b22d93dbd0'],84:['1731586249471-82bb9b2f769a'],1:['1605763240000-7e93b172d754','1590343104492-972a3169bc98'],2:['1693163314237-697faad5b09a','1700064417118-60d85303808d'],3:['1562292817-58d294c3a7e3','1765560219977-33ee2f1dfcc9'],4:['1625158244856-e5e20f733c1f','1747396206869-75ea57b325ce'],5:['1790802243983-e6de0e275f59','1780301662392-6fea210dcd87'],6:['1591224615614-e300d72e37c5','1570308089942-8b66def201f0'],7:['1609369350331-4f12b446d487','1609369350243-83d11c675ff8'],8:['1768745534287-0e41db00cfaf','1768745534089-70a5daa34866'],9:['1789110520769-c18355b70c63','1789110521285-0ad90c7fe2e9'],10:['1789110854735-67c4e4737aa2','1534445538923-ab38438550d2'],11:['1761979680036-38a7f85b2f0b','1590626448480-04a69cb0dbf6'],12:['1687825515654-23620796760c','1789111161072-766f7c6284cc'],13:['1789110520143-9f54f069b43f','1789110520410-4fce7246f844'],14:['1580331451062-99ff652288d7','1698858538463-fe9430fded38'],15:['1634389589159-5d48e1b1f83e','1629821714384-e474d42099ff'],16:['1617127365659-c47fa864d8bc','1618886614638-80e3c103d31a'],17:['1585924756944-b82af627eca9','1542427361-4388a46a654a'],18:['1713881842156-3d9ef36418cc','1713881649391-a1c8ddaf83cd'],19:['1771919328088-3476e8fe65b0','1620461818402-d991ac8a03a2'],20:['1711355249709-1733df63e028','1689214105217-48a71e03281b'],21:['1610901157620-340856d0a50f','1611312449297-a69dc9c3987b'],22:['1624835567150-0c530a20d8cc','1584865288642-42078afe6942'],23:['1621496503717-095a410e1566','1640943136566-3edeb13e3d3b'],24:['1793137949166-716cd20de8d4','1789222523783-65911021aad5'],25:['1624548140129-74786c5f1279','1603394151492-5e9b974b090b'],26:['1575862469245-c43f1b89bee1','1760497925596-a6462350c583'],27:['1597633125184-9fd7e54f0ff7','1575032617751-6ddec2089882'],28:['1783633379008-479aeaaa475b','1554219300-77dd3aa483c0'],29:['1641934777532-d277296b111c','1783558193537-4fc863ec548c'],30:['1783597873128-468a7fb40b8f','1761345880123-c7c3b160c1d4'],31:['1604176424472-17cd740f74e9','1789110854460-18562d439e1c'],32:['1692506530242-c12d6c3ae2e2','1773766779318-d77411b210de'],33:['1596703263926-eb0762ee17e4','1770576568723-c557b096394b'],34:['1602593330926-30c90a271fa5','1682446856916-472a280a384b'],35:['1585120824848-8a5cd41493d2','1628375385879-1af64230c2e1'],36:['1556004583-d2aaffbba592','1777987601447-266e128de448'],37:['1788517638620-8d1b5098c08e','1760667711621-c964114f4838'],38:['1783675951657-17a0e9678b5c','1774647001381-6585f36449f9'],39:['1618677366787-9727aacca7ea','1618677366787-c02f9a52d6e8'],40:['1791214278177-f218fc01afb3','1766998197662-f277a542cfd0'],41:['1590166223826-12dee1677420','1763628212781-7d52844cf358'],42:['1777795530497-205664bbd965','1689193502879-362660fad4a8'],43:['1711443982852-b3df5c563448','1734383524180-3c6f9b21e8e3'],44:['1628483211662-9bcc692c46dc','1614330315526-166f2d71e544']};
+const phURL=(id,w=600)=>`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${Math.round(w*4/3)}&q=75`;
+const PHC={'1|Ivory':['1688597168941-cc8ec4839069','1793363953729-fc79753f8bf2'],'1|Terracotta':['1682723840177-8c0dcd71f4a7','1683660107856-cdad7a562d12'],'2|White':['1605763269552-4705d8c8e301','1613966570650-add3cf83aa83'],'3|Black':['1594739033447-80ab21e24b4c','1651418863131-c9ceb20a5d0f'],'4|Sand':['1721990336298-90832e791b5a','1617019114583-affb34d1b3cd'],'5|Rose':['1708121454064-6bc7b367708a','1745196290754-b77cbb100904'],'6|Sky':['1609883475215-029a8d12426a','1568315081475-d8bbace35dd2'],'6|White':['1624000755940-98a2f79ad7de','1624000742111-357064e6a67e'],'7|Sky':['1618595426380-10f004788ee6','1618591552964-837a5a315fb2'],'8|Ivory':['1779153617374-69c5bee86ce9','1596640909755-0a80c0eba976'],'8|Black':['1790069484700-2dde2cf6c854','1790069487832-a12ffb756e48'],'9|Sun':['1574847872646-abff244bbd87','1787166417275-acf0ce6c4e03'],'10|Sand':['1698222850780-f6bac93979ba','1726631811659-4ce3f1ad1e3e'],'11|Olive':['1669824598417-ad23be228049','1779406167158-e31a9fd91a46'],'12|Black':['1789110519554-bdca2e4549e5','1789110520755-058df30bf9cb'],'12|Sand':['1517445312882-bc9910d016b7','1789110520319-9bbec0598773'],'13|Brown':['1789110520148-bb52ba37759b','1596392927852-2a18c336fb78'],'14|Ivory':['1578795024466-26f49b4d23f6','1773747310674-b42a55d72003'],'15|Rose':['1764451692825-321a1381c661','1776409690263-10d64369066a'],'16|Navy':['1785706873511-77e157860250','1762793193633-c26f3d34e710'],'17|Black':['1686972507679-c4bb04772c8f','1770254082099-061fb0132318'],'17|Sun':['1776688128903-2a375d021651','1712927200161-9c0ce5c41d0b'],'18|White':['1622445275463-afa2ab738c34','1574180566232-aaad1b5b8450'],'18|Stripe':['1672857995200-358b2f40ff5b','1629871870289-21efd577d820'],'19|Sand':['1627686011747-74adda3d2343','1593507526070-c48458a74909'],'20|Navy':['1720514496505-d6756368b0b3','1604006853105-d44ea6e146ef'],'20|Terracotta':['1723189037167-8a0bb4c423af','1788029955091-942f48210d44'],'21|Sand':['1604573824419-289a9a10672c'],'22|Navy':['1790270723830-1f29059c2e1c'],'22|Black':['1768696081901-5be7058d67da','1793060519957-8bb5cbb6e412'],'23|Sand':['1789110853603-11504d948dde','1777367881209-c5d755951d14'],'23|Olive':['1789110519919-ac034e2a0986','1789110519819-8047d10f0c5e'],'24|Sky':['1589050054306-8de38c8e95c2','1792347154093-51b1a1d6c485'],'25|Ivory':['1771074153183-5849e68c5da6','1793055705843-e9210bbb6a9e'],'26|Black':['1586448789181-bef0ee53fc50','1620770175211-08191dfcf05b'],'27|Sun':['1640901555365-cbbb76b0009b','1614809295882-b0dfb87914b1'],'27|Black':['1511405946472-a37e3b5ccd47','1571273260782-bab4699dde20'],'27|Ivory':['1644908325834-3dfd46b1c629','1631847116844-1bf15b042a6f'],'28|Rose':['1683921590274-a83862cb11c3','1634419446253-a1da206cf824'],'29|Ivory':['1617030557822-c8c35f07c60b','1623683945420-f0f890b59b6b'],'30|Brown':['1624687943971-e86af76d57de','1598532163257-ae3c6b2524b6'],'31|Black':['1668435734524-f56709d4403e','1572196284554-4e321b0e7e0b'],'31|Lilac':['1777028724886-8254a593e5ed','1612429207498-281f899b7810'],'32|Brown':['1647540945262-7da3bd1a3d96','1603219527847-24c87f552a77'],'33|Ivory':['1673960508121-3407ffa4bb15','1722340321028-5c7ce4d082f3'],'34|Rose':['1734626317149-043eefacb703','1770150138451-c2b898d02c25'],'35|Ivory':['1614634717465-eb3d6bc8d930','1619510331283-a46c425e48bb'],'36|Black':['1761726065663-6e550c25a6ef','1784822041003-504771076494'],'37|Sun':['1785088560670-a0f49f4444e0','1785088560636-018c1566dc43'],'37|Sky':['1617916918894-7bc1ea780bb2','1627691541764-85b6e9003bec'],'38|Black':['1761348310418-ae694415450b','1624013626935-1494d03a83d5'],'39|Brown':['1567333126229-db29200c25f1','1613074004700-0e6e6c606324'],'40|Ivory':['1748335388176-e00fa3869495','1779746180896-ccf58ab02e48'],'41|White':['1791002598743-492a4d1c1d5e','1735816415206-e971124e0336'],'42|Terracotta':['1632754723707-15aaa034f4eb','1702089050621-62646a2b748f'],'43|Black':['1776951129328-d85072dbdefe','1765152334063-0914acab7155'],'44|Black':['1614330316655-51dbca10f5f0','1614167156454-2bb0d9cfc15f'],'44|Sky':['1781947486948-4a581a6b3df0','1780148651078-4a9244334d51']};
+const SCN={bags:'1589363358751-ab05797e5629',shoes:'1535043934128-cf0b28d52f95',j1:'1732732827685-3570b7fc324e',j2:'1777332546462-1622ade436a6',j3:'1600759487717-62bbb608106e',about:'1630836509605-ef5a2a754f42'};
+function art(p,v=0,colorName){
+ const cn=colorName||p.color;
+ const ph=cn===p.color?PH[p.id]:PHC[p.id+'|'+cn];
+ if(!ph)return artSVG(p,v,colorName);
+ const id=ph[0],big=v>=2,zoom=false;
+ return `<img class="ph" src="${phURL(id,big?900:600)}" alt="${p.name} in ${cn}" loading="lazy" style="object-position:center ${zoom?'30%':'50%'}${zoom?';transform:scale(1.25)':''}" onerror="this.outerHTML=artSVG(P.find(x=>x.id===${p.id}),${v},'${cn}')">`;
+}
+function artSVG(p,v=0,colorName){
+ const cname=colorName||p.color,c=COL[cname],bg=BGS[(p.id+v)%BGS.length];
+ const id=p.id+'_'+v+cname;
+ let inner=shape(p.type,c,id);
+ const hatfix=p.type==='Hat'?inner.replace('rx="X"','rx="82"'):inner;
+ const defs=`<defs><pattern id="st${id}" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#fff"/><rect width="6" height="12" fill="${COL.Sky}"/></pattern><radialGradient id="sh${id}"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>`;
+ let back=`<rect width="300" height="400" fill="${bg}"/>`;
+ let tf='';
+ if(v===1){back=`<rect width="300" height="400" fill="${shade(c==='#ffffff'?COL.Sky:c,.72)}"/><circle cx="230" cy="90" r="46" fill="${COL.Sun}" opacity=".55"/>`;tf='transform="translate(150 215) scale(1.55) translate(-150 -215)"'}
+ if(v===2){back=`<rect width="300" height="400" fill="#e7dccb"/><rect y="250" width="300" height="150" fill="#d8c8ae"/>`;tf='transform="translate(150 230) scale(.82) translate(-150 -230)"'}
+ if(v===3){back=`<rect width="300" height="400" fill="#bcd6df"/><rect y="270" width="300" height="130" fill="#e8d7b8"/><circle cx="70" cy="80" r="30" fill="#f6d27a"/>`;tf='transform="translate(150 220) rotate(-6 150 220) scale(.9) translate(-150 -220)"'}
+ return `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${p.name} in ${cname}">${defs}${back}<ellipse cx="150" cy="${v===1?372:356}" rx="96" ry="14" fill="url(#sh${id})"/><g ${tf}>${hatfix}</g></svg>`;
+}
+
+/* ---------- state ---------- */
+let bag=store.get('bag',[]), wish=store.get('wish',[]);
+bag=bag.filter(b=>P.some(p=>p.id===b.id));wish=wish.filter(id=>P.some(p=>p.id===id));
+const filt={cat:'all',g:'all',color:'all',sort:'feat',pmin:null,pmax:null,sizes:[],colors:[]};
+function save(){store.set('bag',bag);store.set('wish',wish);badges()}
+function badges(){const n=bag.reduce((a,b)=>a+b.q,0);$('#bcount').textContent=n;$('#dcount').textContent=n;$('#wcount').textContent=wish.length}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+const heartSVG='<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/></svg>';
+
+function card(p){
+ return `<article class="card" data-id="${p.id}">
+  <div class="img">${p.badge&&p.badge!=='New'?`<span class="badge">${p.badge}</span>`:''}
+   <button class="heart ${wish.includes(p.id)?'on':''}" data-wish="${p.id}" aria-label="Save">${heartSVG}</button>
+   ${art(p,0)}
+   <button class="quick" data-quick="${p.id}">${SIZES[p.cat].length>1?'Quick view':'Add to bag'}</button>
+  </div>
+  <div class="meta"><div class="n">${p.name}</div></div>
+ </article>`;
+}
+
+/* ---------- scenes ---------- */
+function scene(kind){
+ if(SCN[kind])return `<img class="ph" src="https://images.unsplash.com/photo-${SCN[kind]}?auto=format&fit=crop&w=1200&q=75" alt="" loading="lazy">`;
+ if(kind==='bags')return `<svg viewBox="0 0 600 630" preserveAspectRatio="xMidYMid slice"><rect width="600" height="630" fill="#c4693b"/><circle cx="300" cy="250" r="170" fill="#e58a55"/><rect y="440" width="600" height="190" fill="#a5532c"/><g transform="translate(150 70) scale(1)"><path d="M134 214 Q150 156 166 214" stroke="#7d3a1b" stroke-width="6" fill="none"/><rect x="108" y="212" width="84" height="64" rx="10" fill="#efb93f"/><rect x="138" y="236" width="24" height="5" rx="2" fill="#fff6"/></g><g transform="translate(300 300) scale(1.4) translate(-150 -230)"><path d="M86 236 Q150 60 214 236" stroke="#111" stroke-width="5" fill="none"/><path d="M70 230 Q150 210 230 230 Q226 300 150 304 Q74 300 70 230 Z" fill="#f3ede1"/></g></svg>`;
+ if(kind==='shoes')return `<svg viewBox="0 0 600 630" preserveAspectRatio="xMidYMid slice"><rect width="600" height="630" fill="#9cc4d6"/><rect y="400" width="600" height="230" fill="#e8d7b8"/><circle cx="460" cy="140" r="70" fill="#f6d27a"/><g transform="translate(140 220) scale(1.5) translate(-150 -300)"><path d="M50 296 Q80 266 140 266 Q170 248 204 244 Q232 244 238 270 L240 296 Z" fill="#efb93f"/><path d="M206 296 L230 296 L232 352 L224 352 Z" fill="#9b6f1b"/></g><g transform="translate(400 380) scale(1.4) translate(-150 -300)"><path d="M52 300 Q60 286 150 288 Q236 288 246 300 L246 308 L52 308 Z" fill="#5a3520"/><path d="M90 290 Q120 238 160 290 M130 290 Q170 236 206 290" stroke="#7a4b2e" stroke-width="11" fill="none"/></g></svg>`;
+ if(kind==='j1')return `<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#f1d7a7"/><circle cx="200" cy="210" r="110" fill="#efb93f"/><rect y="300" width="400" height="200" fill="#6fa3b5"/><path d="M0 330 Q50 315 100 330 T200 330 T300 330 T400 330" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/><path d="M0 370 Q50 355 100 370 T200 370 T300 370 T400 370" stroke="#fff" stroke-width="3" fill="none" opacity=".5"/></svg>`;
+ if(kind==='j2')return `<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#e9dfcf"/><rect x="60" y="80" width="280" height="340" fill="#d9c3a0"/>${[0,1,2,3,4,5,6,7,8,9].map(i=>`<path d="M60 ${100+i*32} L340 ${100+i*32}" stroke="#b79d74" stroke-width="2"/>`).join('')}<circle cx="300" cy="120" r="34" fill="#c4693b"/></svg>`;
+ if(kind==='j3')return `<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#7b7d4a"/><path d="M0 500 L0 300 Q100 220 200 290 Q300 200 400 280 L400 500 Z" fill="#5f6138"/><circle cx="110" cy="130" r="44" fill="#f2e3c2"/><g fill="#b9a7cf">${[0,1,2,3,4,5,6,7].map(i=>`<ellipse cx="${40+i*46}" cy="${380+(i%2)*20}" rx="8" ry="26"/>`).join('')}</g></svg>`;
+ if(kind==='about')return `<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#f3d9b4"/><circle cx="200" cy="190" r="90" fill="#efb93f"/><rect y="290" width="400" height="210" fill="#6fa3b5"/><path d="M0 290 L120 220 L190 290 Z M240 290 L330 200 L400 260 L400 290Z" fill="#d9c3a0"/></svg>`;
+}
+
+/* ---------- views ---------- */
+function home(){
+ const newIn=P.filter(p=>p.badge==='New').slice(0,8);
+ const best=P.filter(p=>p.badge==='Bestseller').concat(P.filter(p=>!p.badge)).slice(0,8);
+ return `
+ <div class="hero" id="hero">
+  <div class="slide on"><img src="https://images.unsplash.com/photo-1577900232413-d4009bb81e73?auto=format&fit=crop&w=2000&q=75" alt="" onerror="this.style.display='none'" style="object-position:center 30%"><div class="copy"><h1>L'Été Infini</h1><p>Spring — Summer 2027 Collection</p><a class="btn light" href="#shop-new">Discover the collection</a></div></div>
+  <div class="slide"><img src="https://images.unsplash.com/photo-1772917578224-9dc091d9a82b?auto=format&fit=crop&w=2000&q=75" alt="" onerror="this.style.display='none'" style="object-position:center 35%"><div class="copy"><h1>Women</h1><p>Dresses, linen & swim for long summer days</p><a class="btn light" href="#shop-women">Shop women</a></div></div>
+  <div class="slide"><img src="https://images.unsplash.com/photo-1766104804285-66867659f8a3?auto=format&fit=crop&w=2000&q=75" alt="" onerror="this.style.display='none'" style="object-position:center 30%"><div class="copy"><h1>Men</h1><p>Linen shirts, tailoring & easy knits</p><a class="btn light" href="#shop-men">Shop men</a></div></div>
+  <button class="harr prev" data-slide="-1" aria-label="Previous">‹</button><button class="harr next" data-slide="+1" aria-label="Next">›</button>
+  <div class="hdots"><button data-slide="0" class="on" aria-label="Slide 1"></button><button data-slide="1" class="" aria-label="Slide 2"></button><button data-slide="2" class="" aria-label="Slide 3"></button></div>
+ </div>
+ <div class="marquee"><div>${('<span>Le soleil se lève</span><span>·</span><span>Linen, light & colour</span><span>·</span><span>Designed in Marseille</span><span>·</span><span>Free returns</span><span>·</span>').repeat(4)}</div></div>
+ <div class="split">
+  <a class="tile" href="#shop-bags">${scene('bags')}<div class="lbl"><h3>Les Sacs</h3><span class="btn light">Shop bags</span></div></a>
+  <a class="tile" href="#shop-shoes">${scene('shoes')}<div class="lbl"><h3>Les Chaussures</h3><span class="btn light">Shop shoes</span></div></a>
+ </div>
+ <div class="stwrap"><img src="https://images.unsplash.com/photo-1628712825039-bd75c6bd7bc8?auto=format&fit=crop&w=2000&q=75" alt="" loading="lazy" onerror="this.remove()"><div class="statement"><span class="up">La Maison</span><p>Clothes for long afternoons, salt on the skin and the colour of the hour before dusk. Every piece begins with a memory of the south.</p><a href="#maison" class="btn" style="margin-top:30px">Our story</a></div></div>
+ <section id="journal" style="padding-top:20px"><div class="shead"><h2>Le Journal</h2><a href="#maison">Read more</a></div>
+  <div class="journal">
+   <a class="jcard" href="#maison"><div class="jimg">${scene('j1')}</div><h4>The colour of the hour</h4><p>How the late summer light of the calanques shaped the palette of L'Été Infini.</p></a>
+   <a class="jcard" href="#shop-bags"><div class="jimg">${scene('j2')}</div><h4>Inside the raffia atelier</h4><p>Six weeks, three artisans and one basket: the making of our Market Basket.</p></a>
+   <a class="jcard" href="#shop-women"><div class="jimg">${scene('j3')}</div><h4>A field of lavender</h4><p>Our summer show, staged at dawn among the purple rows of Valensole.</p></a>
+  </div></section>`;
+}
+const BAN={all:'1558769132-cb1aea458c5e',new:'1594247661193-ffb7018f04f8',women:'1607784750393-5edbcd13fc36',men:'1788500304837-5c4d87012261',bags:'1605733513597-a8f8341084e6',shoes:'1519415943484-9fa1873496d4',accessories:'1608539733292-190446b22b83',maison:'1691770128080-64f654258ca7',wish:'1622532470022-24107cac5ef3'};
+const banImg=k=>BAN[k]?`<img class="pban" src="https://images.unsplash.com/photo-${BAN[k]}?auto=format&fit=crop&w=2000&h=700&q=75" alt="" onerror="this.remove()">`:'';
+const TITLES={all:['La Collection','Every piece of the maison'],new:['Nouveautés','The latest arrivals from L\'Été Infini'],women:['Femme','Ready-to-wear, bags, shoes and accessories'],men:['Homme','Ready-to-wear, bags, shoes and accessories'],bags:['Les Sacs','Sculpted leather and woven raffia'],shoes:['Les Chaussures','Mules, sandals and loafers'],accessories:['Accessoires','Hats, eyewear, jewellery and small leather goods']};
+function shop(k){
+ const t=TITLES[k]||TITLES.all;
+ return `<div class="ptitle photo">${banImg(TITLES[k]?k:'all')}<div class="pin"><h1>${t[0]}</h1><p>${t[1]}</p></div></div>
+ <div class="fbar"><span id="pcount"></span><button class="fbtn" id="openFilter">Filter <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 7h12M19 7h2M3 17h4M11 17h10" stroke="currentColor" stroke-width="2"/><rect x="15" y="4" width="4" height="6" fill="currentColor"/><rect x="7" y="14" width="4" height="6" fill="currentColor"/></svg></button></div>
+ <section style="padding-top:28px"><div class="grid" id="sgrid"></div></section>`;
+}
+function filtered(k){
+ let L=P.slice();
+ if(k==='new')L=L.filter(p=>p.badge==='New');
+ if(k==='women')L=L.filter(p=>p.g!=='men');
+ if(k==='men')L=L.filter(p=>p.g!=='women');
+ if(['bags','shoes','accessories'].includes(k))L=L.filter(p=>p.cat===k);
+ if(filt.cat!=='all')L=L.filter(p=>p.cat===filt.cat);
+ if(filt.g!=='all')L=L.filter(p=>p.g===filt.g||p.g==='unisex');
+ if(filt.color!=='all')L=L.filter(p=>p.colors.includes(filt.color));
+ if(filt.pmin!=null)L=L.filter(p=>p.price>=filt.pmin);
+ if(filt.pmax!=null)L=L.filter(p=>p.price<=filt.pmax);
+ if(filt.sizes.length)L=L.filter(p=>SIZES[p.cat].some(z=>filt.sizes.includes(z)));
+ if(filt.colors.length)L=L.filter(p=>filt.colors.includes(p.color));
+ if(filt.sort==='low')L.sort((a,b)=>a.price-b.price);
+ if(filt.sort==='high')L.sort((a,b)=>b.price-a.price);
+ if(filt.sort==='az')L.sort((a,b)=>a.name.localeCompare(b.name));
+ return L;
+}
+function drawShop(k){
+ const L=filtered(k);
+ if($('#pcount'))$('#pcount').textContent=L.length+(L.length===1?' Product':' Products');
+ if($('#fview'))$('#fview').textContent='View '+L.length+(L.length===1?' product':' products');
+ $('#sgrid').innerHTML=L.length?L.map(card).join(''):'';
+ if(!L.length)$('#sgrid').outerHTML=`<div class="grid" id="sgrid"></div><div class="empty serif" style="font-size:28px">Nothing matches these filters.</div>`;
+}
+let pdState={size:null,color:null};
+function product(id,colorName){
+ const p=P.find(x=>x.id===id);if(!p)return home();
+ const cn=colorName||p.color;pdState={size:SIZES[p.cat].length===1?SIZES[p.cat][0]:null,color:cn};
+ const rel=P.filter(x=>x.id!==p.id&&(x.cat===p.cat)).slice(0,4);
+ const out=SIZES[p.cat].length>1?[SIZES[p.cat][(p.id*3)%SIZES[p.cat].length]]:[];
+ return `<div class="pd">
+  <div class="gal" style="grid-template-columns:1fr"><div class="g">${art(p,2,cn)}</div></div>
+  <div class="info">
+   <div class="crumb"><a href="#shop">Shop</a> / <a href="#shop-${p.cat==='rtw'?(p.g==='men'?'men':'women'):p.cat}">${p.cat==='rtw'?'Ready-to-wear':p.cat}</a> / ${p.type}</div>
+   <h1>${p.name}</h1><div class="price">${eur(p.price)}</div>
+   <p class="desc">${p.desc}</p>
+   <div class="lab"><span>Size</span>${SIZES[p.cat].length>1?'<span style="text-decoration:underline;cursor:pointer" id="sg">Size guide</span>':''}</div>
+   <div class="sizes" id="sizes">${SIZES[p.cat].map(s=>`<button data-size="${s}" class="${out.includes(s)?'out':''} ${pdState.size===s?'on':''}" ${out.includes(s)?'disabled title="Sold out"':''}>${s}</button>`).join('')}</div>
+   <div class="actions"><button class="btn solid" id="add" data-id="${p.id}">Add to bag</button><button class="heart ${wish.includes(p.id)?'on':''}" data-wish="${p.id}" aria-label="Save">${heartSVG}</button></div>
+   <div class="acc">
+    <details open><summary>Details</summary><div class="body">${p.desc} Ref. CQ27-${String(p.id).padStart(3,'0')}.</div></details>
+    <details><summary>Composition & care</summary><div class="body">${p.comp}. ${p.cat==='rtw'?'Dry clean or gentle hand wash at 30°. Dry flat in the shade.':'Wipe clean with a soft dry cloth. Store in the dust bag provided.'}</div></details>
+    <details><summary>Shipping & returns</summary><div class="body">Complimentary express shipping over $300, delivered in 2–4 working days. Free returns within 30 days.</div></details>
+    <details><summary>Made in</summary><div class="body">${p.cat==='bags'||p.cat==='shoes'?'Handmade in Italy':'Made in Portugal'} in a family-run atelier we have worked with since the first collection.</div></details>
+   </div>
+  </div>
+ </div>
+ <section><div class="shead"><h2>You may also like</h2><a href="#shop-${p.cat==='rtw'?'women':p.cat}">View all</a></div><div class="grid">${rel.map(card).join('')}</div></section>`;
+}
+function wishlist(){
+ const L=P.filter(p=>wish.includes(p.id));
+ return `<div class="ptitle photo">${banImg('wish')}<div class="pin"><h1>Wishlist</h1><p>${L.length} saved piece${L.length===1?'':'s'}</p></div></div><section>${L.length?`<div class="grid">${L.map(card).join('')}</div>`:`<div class="empty"><p class="serif" style="font-size:30px;margin-bottom:20px">Your wishlist is empty.</p><a class="btn" href="#shop-new">Discover new arrivals</a></div>`}</section>`;
+}
+function aboutPage(){
+ return `<div class="ptitle photo">${banImg('maison')}<div class="pin"><h1>La Maison</h1><p>Our story</p></div></div>
+ <section><div class="about"><div class="aimg">${scene('about')}</div><div>
+  <p class="serif" style="font-size:30px;line-height:1.3;color:var(--ink)">Elora was born beside a rocky inlet east of Marseille, where the water turns from turquoise to ink in a single step.</p>
+  <p>We design clothes with the simplicity of a summer afternoon: generous linen, bold sun-bleached colour, sculpted bags small enough to forget you're carrying them. Each season begins with a place in the south and a single feeling we want to hold on to.</p>
+  <p>Our pieces are produced in limited runs with family ateliers in Portugal and Italy, using natural fibres, vegetable-tanned leathers and recycled swim fabrics wherever we can.</p>
+  <p style="margin-top:28px"><a class="btn solid" href="#shop">Shop the collection</a></p>
+ </div></div></section>`;
+}
+
+/* ---------- router ---------- */
+function route(){
+ const h=location.hash.slice(1)||'home';
+ const app=$('#app');
+ document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on','shop-'+a.dataset.k===h));
+ $('#mnav').classList.remove('on');
+ if(h.startsWith('p-')){app.innerHTML=product(+h.slice(2));}
+ else if(h==='shop'||h.startsWith('shop-')){const k=h==='shop'?'all':h.slice(5);filt.cat='all';filt.g='all';filt.color='all';filt.sort='feat';filt.pmin=null;filt.pmax=null;filt.sizes=[];filt.colors=[];app.innerHTML=shop(k);app.dataset.k=k;drawShop(k)}
+ else if(h==='wishlist')app.innerHTML=wishlist();
+ else if(h==='checkout'){app.innerHTML=checkoutPage();coSummary()}
+ else if(h==='order-confirmed')app.innerHTML=confirmPage();
+ else if(h==='maison')app.innerHTML=aboutPage();
+ else if(h==='journal'){app.innerHTML=home();setTimeout(()=>document.getElementById('journal')?.scrollIntoView(),30);return}
+ else app.innerHTML=home();
+ window.scrollTo(0,0);headerMode();
+}
+window.addEventListener('hashchange',route);
+/* transparent header over photos */
+function headerMode(){const h=location.hash.slice(1)||'home';const hd=document.querySelector('header');const ban=h.startsWith('p-')?null:document.querySelector('.hero,.ptitle.photo');document.documentElement.style.setProperty('--hh',hd.offsetHeight+'px');document.body.classList.toggle('ovl',!!ban);if(!ban){document.body.classList.remove('clear');hd.style.removeProperty('--p');return}const end=ban.offsetHeight-hd.offsetHeight,start=Math.max(0,end-220);const p=Math.min(1,Math.max(0,(window.scrollY-start)/(end-start||1)));hd.style.setProperty('--p',p.toFixed(3));document.body.classList.toggle('clear',p<.5)}
+let hmq=0;window.addEventListener('scroll',()=>{if(!hmq){hmq=1;requestAnimationFrame(()=>{hmq=0;headerMode()})}},{passive:true});window.addEventListener('resize',headerMode);
+
+
+/* ---------- bag ---------- */
+function addToBag(id,size,color){
+ const p=P.find(x=>x.id===id);color=color||p.color;
+ const ex=bag.find(b=>b.id===id&&b.s===size&&b.c===color);
+ ex?ex.q++:bag.push({id,s:size,c:color,q:1});save();drawBag();openDrawer();
+}
+function drawBag(){
+ const sub=bag.reduce((a,b)=>a+P.find(p=>p.id===b.id).price*b.q,0);
+ $('#dbody').innerHTML=bag.length?bag.map((b,i)=>{const p=P.find(x=>x.id===b.id);return `<div class="line"><a class="th" href="#p-${p.id}">${art(p,0,b.c)}</a><div><div class="ln">${p.name}</div><div class="ls">${b.c} · ${b.s}</div><div class="qty"><button data-dq="${i}">−</button><span>${b.q}</span><button data-iq="${i}">+</button></div><button class="rm" data-rm="${i}">Remove</button></div><div style="font-size:14px">${eur(p.price*b.q)}</div></div>`}).join(''):`<div class="empty"><p class="serif" style="font-size:26px;margin-bottom:18px">Your bag is empty.</p><a class="btn" href="#shop-new" id="emptyGo">Continue shopping</a></div>`;
+ const left=Math.max(0,300-sub);
+ $('#dfoot').innerHTML=bag.length?`<div class="row" style="font-size:12px;color:var(--mute)"><span>${left?`Add ${eur(left)} for complimentary shipping`:'You qualify for complimentary shipping'}</span></div><div class="ship"><i style="width:${Math.min(100,sub/3)}%"></i></div><div class="row"><span>Subtotal</span><span>${eur(sub)}</span></div><div class="row" style="color:var(--mute);font-size:13px"><span>Shipping</span><span>${left?'$15':'Free'}</span></div><button class="btn solid" id="checkout" style="width:100%;margin-top:10px">Checkout · ${eur(sub+(left?15:0))}</button>`:'';
+}
+function openDrawer(){$('#drawer').classList.add('on');$('#scrim').classList.add('on')}
+function closeAll(){['#drawer','#scrim','#search','#fpanel'].forEach(s=>$(s).classList.remove('on'))}
+
+/* ---------- search ---------- */
+function drawSearch(){
+ const q=$('#q').value.trim().toLowerCase();
+ const L=q?P.filter(p=>(p.name+' '+p.type+' '+p.color+' '+p.colors.join(' ')+' '+p.cat+' '+p.g).toLowerCase().includes(q)):P.filter(p=>p.badge==='Bestseller');
+ $('#sres').innerHTML=L.length?L.slice(0,12).map(card).join(''):`<p class="serif" style="font-size:24px;grid-column:1/-1;color:var(--mute)">No results for “${q}”.</p>`;
+}
+$('#sug').innerHTML=['Dress','Linen','Mini bag','Sandal','Sky','Knitwear','Sunglasses'].map(s=>`<button data-s="${s}">${s}</button>`).join('');
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-wish],[data-quick],[data-cat],[data-g],[data-color],[data-size],[data-cw],[data-dq],[data-iq],[data-rm],[data-s],#add,#checkout,#emptyGo,.card,#sg');
+ if(!t)return;
+ if(t.dataset.wish){e.stopPropagation();e.preventDefault();const id=+t.dataset.wish;const on=wish.includes(id);wish=on?wish.filter(x=>x!==id):[...wish,id];save();document.querySelectorAll(`[data-wish="${id}"]`).forEach(b=>b.classList.toggle('on',!on));toast(on?'Removed from wishlist':'Saved to wishlist');if(location.hash==='#wishlist')route();return}
+ if(t.dataset.quick){e.stopPropagation();const p=P.find(x=>x.id===+t.dataset.quick);if(SIZES[p.cat].length===1){addToBag(p.id,'One size')}else{closeAll();location.hash='p-'+p.id}return}
+ if(t.dataset.cat){filt.cat=t.dataset.cat;t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===t));drawShop($('#app').dataset.k);return}
+ if(t.dataset.g){filt.g=t.dataset.g;t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===t));drawShop($('#app').dataset.k);return}
+ if(t.dataset.color){filt.color=t.dataset.color;t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===t));drawShop($('#app').dataset.k);return}
+ if(t.dataset.size){pdState.size=t.dataset.size;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('on',b===t));return}
+ if(t.dataset.cw){e.preventDefault();const id=+location.hash.slice(3);const keep=pdState.size;$('#app').innerHTML=product(id,t.dataset.cw);if(keep){pdState.size=keep;document.querySelector(`[data-size="${keep}"]`)?.classList.add('on')}return}
+ if(t.id==='add'){if(!pdState.size){toast('Please select a size');document.getElementById('sizes').animate([{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'none'}],{duration:240});return}addToBag(+t.dataset.id,pdState.size,pdState.color);return}
+ if(t.id==='sg'){toast('XS 34 · S 36 · M 38 · L 40 · XL 42 (FR)');return}
+ if(t.dataset.dq){const b=bag[+t.dataset.dq];b.q--;if(!b.q)bag.splice(+t.dataset.dq,1);save();drawBag();return}
+ if(t.dataset.iq){bag[+t.dataset.iq].q++;save();drawBag();return}
+ if(t.dataset.rm){bag.splice(+t.dataset.rm,1);save();drawBag();return}
+ if(t.dataset.s){$('#q').value=t.dataset.s;drawSearch();return}
+ if(t.id==='checkout'){closeAll();location.hash='checkout';return}
+ if(t.id==='emptyGo'){closeAll();return}
+ if(t.classList.contains('card')){closeAll();location.hash='p-'+t.dataset.id}
+});
+document.addEventListener('change',e=>{if(e.target.id==='sort'){filt.sort=e.target.value;drawShop($('#app').dataset.k)}});
+$('#openBag').onclick=()=>{drawBag();openDrawer()};
+$('#closeBag').onclick=closeAll;$('#scrim').onclick=closeAll;
+$('#openSearch').onclick=()=>{$('#search').classList.add('on');$('#scrim').classList.add('on');drawSearch();setTimeout(()=>$('#q').focus(),300)};
+$('#closeSearch').onclick=closeAll;
+$('#q').addEventListener('input',drawSearch);
+$('#burger').onclick=()=>$('#mnav').classList.add('on');$('#mclose').onclick=()=>$('#mnav').classList.remove('on');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+$('#newsForm').addEventListener('submit',e=>{e.preventDefault();e.target.reset();toast('Merci — you\'re on the list')});
+badges();route();
+
+/* hero carousel */
+let heroI=0,heroHover=false;
+function heroGo(n){const h=document.getElementById('hero');if(!h)return;const sl=h.querySelectorAll('.slide'),d=h.querySelectorAll('.hdots button');heroI=(n+sl.length)%sl.length;sl.forEach((x,i)=>x.classList.toggle('on',i===heroI));d.forEach((x,i)=>x.classList.toggle('on',i===heroI))}
+setInterval(()=>{const h=document.getElementById('hero');if(h&&!heroHover&&!document.hidden){if(!h.querySelector('.slide.on'))heroI=-1;heroGo(heroI+1)}},5000);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-slide]');if(!b)return;e.preventDefault();const v=b.dataset.slide;heroGo(v[0]==='+'||v[0]==='-'?heroI+parseInt(v):+v)});
+document.addEventListener('mouseover',e=>{heroHover=!!e.target.closest('#hero .copy')});
+
+/* filter panel */
+function baseList(k){const f={...filt};filt.pmin=null;filt.pmax=null;filt.sizes=[];filt.colors=[];const L=filtered(k);Object.assign(filt,f);return L}
+function drawFilter(){
+ const k=$('#app').dataset.k||'all',B=baseList(k);
+ const lo=Math.floor(Math.min(...B.map(p=>p.price))/10)*10,hi=Math.ceil(Math.max(...B.map(p=>p.price))/10)*10;
+ const a=filt.pmin??lo,b=filt.pmax??hi;
+ const order=['XS','S','M','L','XL','5','6','7','8','9','10','11','12','13','One size'];
+ const sizes=order.filter(z=>B.some(p=>SIZES[p.cat].includes(z)));
+ const cols=[...new Set(B.map(p=>p.color))];
+ const sec=(t,inner,open)=>`<details class="fsec"${open?' open':''}><summary>${t}</summary><div class="fin">${inner}</div></details>`;
+ $('#fpanel').innerHTML=`<div class="fp-head"><span>Filter</span><button id="fclose" aria-label="Close">✕</button></div>
+ <div class="fp-body">
+  ${sec('Price range',`<div class="prow"><span id="plo">${eur(a)}</span><span id="phi">${eur(b)}</span></div><div class="range" data-lo="${lo}" data-hi="${hi}"><div class="track"></div><div class="fill" id="pfill"></div><input type="range" id="rmin" min="${lo}" max="${hi}" step="10" value="${a}"><input type="range" id="rmax" min="${lo}" max="${hi}" step="10" value="${b}"></div>`,true)}
+  ${sec('Sort by',`<div class="fopts">${[['feat','Featured'],['low','Price: low to high'],['high','Price: high to low']].map(([v,l])=>`<button data-fsort="${v}" class="${filt.sort===v?'on':''}">${l}</button>`).join('')}</div>`,true)}
+  ${sec('Size',`<div class="fopts">${sizes.map(z=>`<button data-fsize="${z}" class="${filt.sizes.includes(z)?'on':''}">${z}</button>`).join('')}</div>`,true)}
+  ${sec('Colour',`<div class="fopts fcols">${cols.map(c=>`<button data-fcolor="${c}" class="${filt.colors.includes(c)?'on':''}"><i style="background:${c==='Stripe'?'repeating-linear-gradient(90deg,#9cc4d6 0 3px,#fff 3px 6px)':COL[c]}"></i>${c}</button>`).join('')}</div>`,true)}
+ </div>
+ <div class="fp-foot"><button id="fclear">Clear all</button><button id="fview"></button></div>`;
+ paintRange();drawShop(k);
+}
+function paintRange(){const r=$('.range');if(!r)return;const lo=+r.dataset.lo,hi=+r.dataset.hi,a=+$('#rmin').value,b=+$('#rmax').value,w=hi-lo||1;$('#pfill').style.left=((a-lo)/w*100)+'%';$('#pfill').style.right=((hi-b)/w*100)+'%';$('#plo').textContent=eur(a);$('#phi').textContent=eur(b)}
+document.addEventListener('input',e=>{if(e.target.id!=='rmin'&&e.target.id!=='rmax')return;let a=+$('#rmin').value,b=+$('#rmax').value;if(a>b){if(e.target.id==='rmin'){a=b;$('#rmin').value=a}else{b=a;$('#rmax').value=b}}const r=$('.range');filt.pmin=a>+r.dataset.lo?a:null;filt.pmax=b<+r.dataset.hi?b:null;paintRange();drawShop($('#app').dataset.k)});
+document.addEventListener('click',e=>{
+ if(e.target.closest('#openFilter')){drawFilter();$('#fpanel').classList.add('on');$('#scrim').classList.add('on');return}
+ if(e.target.closest('#fclose')||e.target.closest('#fview')){$('#fpanel').classList.remove('on');$('#scrim').classList.remove('on');return}
+ if(e.target.closest('#fclear')){filt.sort='feat';filt.pmin=null;filt.pmax=null;filt.sizes=[];filt.colors=[];drawFilter();return}
+ const t=e.target.closest('[data-fsort],[data-fsize],[data-fcolor]');if(!t)return;
+ if(t.dataset.fsort){filt.sort=t.dataset.fsort}
+ if(t.dataset.fsize){const z=t.dataset.fsize;filt.sizes=filt.sizes.includes(z)?filt.sizes.filter(x=>x!==z):[...filt.sizes,z]}
+ if(t.dataset.fcolor){const c=t.dataset.fcolor;filt.colors=filt.colors.includes(c)?filt.colors.filter(x=>x!==c):[...filt.colors,c]}
+ const open=[...document.querySelectorAll('.fsec')].map(d=>d.open);drawFilter();document.querySelectorAll('.fsec').forEach((d,i)=>d.open=open[i]);
+});
+
+/* ---------- checkout ---------- */
+const STATES=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+let coShip='standard',coPromo=0,lastOrder=null;
+const fld=(id,label,attrs='',cls='')=>`<div class="fld ${cls}"><input id="${id}" placeholder=" " ${attrs}><label for="${id}">${label}</label><div class="msg">Please enter a valid ${label.toLowerCase()}.</div></div>`;
+function checkoutPage(){
+ if(!bag.length)return `<div class="co-empty"><p class="serif" style="font-size:34px;margin-bottom:22px">Your bag is empty.</p><a class="btn" href="#shop-new">Continue shopping</a></div>`;
+ return `<div class="co"><div class="co-main"><form id="coForm" novalidate>
+  <h1>Checkout</h1><div class="crumbs"><a href="#" id="coBag">Bag</a> &nbsp;/&nbsp; Information &amp; payment</div>
+  <h2>Contact</h2>
+  <div class="cgrid">${fld('coEmail','Email','type="email" autocomplete="email" required','full')}${fld('coPhone','Phone (optional)','type="tel" autocomplete="tel"','full')}</div>
+  <label class="chk"><input type="checkbox" checked> Email me about new collections and private sales</label>
+  <h2>Shipping address</h2>
+  <div class="cgrid">
+   ${fld('coFirst','First name','autocomplete="given-name" required')}${fld('coLast','Last name','autocomplete="family-name" required')}
+   ${fld('coAddr','Address','autocomplete="address-line1" required','full')}
+   ${fld('coAddr2','Apartment, suite, etc. (optional)','autocomplete="address-line2"','full')}
+  </div>
+  <div class="cgrid three" style="margin-top:12px">
+   ${fld('coCity','City','autocomplete="address-level2" required')}
+   <div class="fld"><select id="coState" required><option value="">Select</option>${STATES.map(x=>`<option>${x}</option>`).join('')}</select><label for="coState">State</label><div class="msg">Please select a state.</div></div>
+   ${fld('coZip','ZIP code','inputmode="numeric" autocomplete="postal-code" maxlength="10" required')}
+  </div>
+  <div class="cgrid" style="margin-top:12px"><div class="fld full"><select id="coCountry"><option>United States</option></select><label for="coCountry">Country</label></div></div>
+  <h2>Shipping method</h2>
+  <div class="ship-opts">
+   <label class="ship-opt"><input type="radio" name="ship" value="standard" ${coShip==='standard'?'checked':''}><span class="sn">Standard<span class="sd">5–7 business days</span></span><span id="stdPrice"></span></label>
+   <label class="ship-opt"><input type="radio" name="ship" value="express" ${coShip==='express'?'checked':''}><span class="sn">Express<span class="sd">2–3 business days</span></span><span>$25</span></label>
+   <label class="ship-opt"><input type="radio" name="ship" value="overnight" ${coShip==='overnight'?'checked':''}><span class="sn">Overnight<span class="sd">Next business day, order by 1pm ET</span></span><span>$45</span></label>
+  </div>
+  <h2>Payment <small>DEMO — NO PAYMENT IS TAKEN</small></h2>
+  <div class="paynote"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="11"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>This is a portfolio demo. Do not enter real card details.</div>
+  <div class="cgrid">
+   ${fld('coCard','Card number','inputmode="numeric" autocomplete="off" maxlength="19" required','full')}
+   ${fld('coExp','Expiry (MM / YY)','inputmode="numeric" autocomplete="off" maxlength="7" required')}${fld('coCvc','Security code','inputmode="numeric" autocomplete="off" maxlength="4" required')}
+   ${fld('coName','Name on card','autocomplete="off" required','full')}
+  </div>
+  <label class="chk"><input type="checkbox" checked> Billing address same as shipping</label>
+  <button class="btn solid place" id="placeOrder" type="submit">Place order</button>
+ </form></div>
+ <aside class="co-side"><div class="co-side-in"><h2 style="margin-top:0">Order summary</h2><div id="coItems"></div>
+  <div class="promo"><div class="fld"><input id="coPromo" placeholder=" "><label for="coPromo">Gift card or promo code</label></div><button id="applyPromo" type="button">Apply</button></div>
+  <div id="coTotals"></div></div></aside></div>`;
+}
+function coCalc(){const sub=bag.reduce((a,b)=>a+P.find(p=>p.id===b.id).price*b.q,0);const disc=Math.round(sub*coPromo);const std=sub>=300?0:15;const ship=coShip==='express'?25:coShip==='overnight'?45:std;const tax=Math.round((sub-disc)*0.08*100)/100;return{sub,disc,ship,std,tax,total:sub-disc+ship+tax}}
+const usd=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function coSummary(){
+ if(!$('#coItems'))return;const c=coCalc();
+ $('#coItems').innerHTML=bag.map(b=>{const p=P.find(x=>x.id===b.id);return `<div class="co-item"><div class="th">${art(p,0,b.c)}<span class="q">${b.q}</span></div><div><div class="nm">${p.name}</div><div class="vr">${b.c} · ${b.s}</div></div><div class="pr">${usd(p.price*b.q)}</div></div>`}).join('');
+ $('#stdPrice').textContent=c.std?'$15':'Free';
+ $('#coTotals').innerHTML=`<div class="sumrow"><span>Subtotal</span><span>${usd(c.sub)}</span></div>${c.disc?`<div class="sumrow"><span>Promo (WELCOME10)</span><span>−${usd(c.disc)}</span></div>`:''}<div class="sumrow mute"><span>Shipping</span><span>${c.ship?usd(c.ship):'Free'}</span></div><div class="sumrow mute"><span>Estimated tax</span><span>${usd(c.tax)}</span></div><div class="sumrow tot"><span>Total</span><span><small>USD</small>${usd(c.total)}</span></div>`;
+ $('#placeOrder').textContent='Place order · '+usd(c.total);
+}
+function coValidate(){
+ const rules={coEmail:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),coFirst:v=>v.trim(),coLast:v=>v.trim(),coAddr:v=>v.trim().length>3,coCity:v=>v.trim(),coState:v=>v,coZip:v=>/^\d{5}(-\d{4})?$/.test(v.trim()),coCard:v=>v.replace(/\s/g,'').length>=13,coExp:v=>/^(0[1-9]|1[0-2])\s?\/\s?\d{2}$/.test(v.trim()),coCvc:v=>/^\d{3,4}$/.test(v),coName:v=>v.trim()};
+ let first=null;for(const [id,f] of Object.entries(rules)){const el=$('#'+id);const ok=!!f(el.value);el.closest('.fld').classList.toggle('err',!ok);if(!ok&&!first)first=el}
+ if(first){first.focus();first.scrollIntoView({block:'center',behavior:'smooth'})}return !first;
+}
+function confirmPage(){
+ if(!lastOrder)return checkoutPage();const o=lastOrder;
+ return `<div class="confirm"><div class="tick">✓</div><h1>Merci, ${o.name}.</h1><p>Your order is confirmed. A confirmation has been sent to ${o.email}.</p><p>It will ship ${o.ship} to ${o.city}, ${o.state}.</p><div class="ono">ORDER ${o.no} &nbsp;·&nbsp; ${usd(o.total)}</div><br><a class="btn solid" href="#shop-new">Continue shopping</a></div>`;
+}
+document.addEventListener('change',e=>{if(e.target.name==='ship'){coShip=e.target.value;coSummary()}});
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.id==='coCard'){const d=t.value.replace(/\D/g,'').slice(0,16);t.value=d.replace(/(.{4})/g,'$1 ').trim()}
+ if(t.id==='coExp'){let d=t.value.replace(/\D/g,'').slice(0,4);t.value=d.length>2?d.slice(0,2)+' / '+d.slice(2):d}
+ if(t.id==='coCvc'||t.id==='coZip')t.value=t.value.replace(t.id==='coZip'?/[^\d-]/g:/\D/g,'');
+ if(t.closest&&t.closest('.fld.err'))t.closest('.fld').classList.remove('err');
+});
+document.addEventListener('click',e=>{
+ if(e.target.id==='coBag'){e.preventDefault();openDrawer&&(drawBag(),openDrawer());return}
+ if(e.target.id==='applyPromo'){const v=$('#coPromo').value.trim().toUpperCase();if(v==='WELCOME10'){coPromo=.1;toast('Promo applied — 10% off')}else{coPromo=0;toast(v?'That code isn\u2019t valid':'Enter a code')}coSummary();return}
+});
+document.addEventListener('submit',e=>{if(e.target.id!=='coForm')return;e.preventDefault();if(!coValidate())return;const c=coCalc();
+ lastOrder={no:'EL-'+Math.floor(100000+Math.random()*900000),name:$('#coFirst').value.trim(),email:$('#coEmail').value.trim(),city:$('#coCity').value.trim(),state:$('#coState').value,total:c.total,ship:coShip==='overnight'?'overnight':coShip==='express'?'by express':'by standard delivery'};
+ bag=[];coPromo=0;save();drawBag();location.hash='order-confirmed';});
+</script>
+</body>
+</html>
